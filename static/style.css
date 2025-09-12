@@ -489,7 +489,7 @@ body {
 
 .article-actions {
   position: absolute;
-  top: var(--space-3);
+  bottom: var(--space-3);
   right: var(--space-3);
   display: flex;
   gap: var(--space-1);
@@ -531,7 +531,7 @@ body {
 .reading-content {
   max-width: 680px;
   margin: 0 auto;
-  padding: var(--space-6) var(--space-4);
+  padding: var(--space-4) var(--space-3);
 }
 
 .reading-placeholder {
@@ -761,14 +761,15 @@ body {
 
 /* OPML section */
 .opml-section {
-  padding: var(--space-6);
+  padding: var(--space-4);
   border-top: 1px solid var(--border-light);
 }
 
 .opml-actions {
   display: flex;
-  gap: var(--space-4);
-  align-items: end;
+  gap: var(--space-3);
+  align-items: flex-end;
+  margin-top: var(--space-3);
 }
 
 .opml-import,
@@ -776,10 +777,14 @@ body {
   flex: 1;
 }
 
+.opml-import .form-input {
+  margin-bottom: var(--space-2);
+}
+
 .feeds-management {
-  padding: var(--space-6);
+  padding: var(--space-4);
   border-top: 1px solid var(--border-light);
-  max-height: 300px;
+  max-height: 350px;
   overflow-y: auto;
 }
 
@@ -787,32 +792,54 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--border-light);
+  padding: var(--space-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+  background-color: var(--bg-secondary);
+  transition: var(--transition);
+}
+
+.feed-item:hover {
+  background-color: var(--bg-hover);
 }
 
 .feed-info {
   flex: 1;
+  min-width: 0;
 }
 
 .feed-title {
   font-size: 14px;
   font-weight: var(--font-weight-medium);
   color: var(--text-primary);
+  margin-bottom: var(--space-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .feed-url {
   font-size: 12px;
   color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feed-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .feed-category {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary);
   background-color: var(--bg-tertiary);
-  padding: 2px var(--space-2);
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
-  margin-right: var(--space-3);
+  white-space: nowrap;
 }
 
 .delete-feed-btn {
@@ -823,10 +850,25 @@ body {
   padding: var(--space-2);
   border-radius: var(--radius-sm);
   transition: var(--transition);
+  font-size: 16px;
 }
 
 .delete-feed-btn:hover {
   background-color: rgba(217, 48, 37, 0.1);
+}
+
+/* Manage feeds modal specific styles */
+.manage-feeds-modal .modal-content {
+  max-width: 700px;
+  max-height: 85vh;
+}
+
+.manage-feeds-form {
+  padding: var(--space-4);
+}
+
+.manage-feeds-form .form-group {
+  margin-bottom: var(--space-3);
 }
 
 /* Utility classes */
