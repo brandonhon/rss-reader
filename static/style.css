@@ -557,6 +557,23 @@ body {
   font-size: var(--font-size-sm);
   color: var(--text-tertiary);
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.article-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.source-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 }
 
 .article-meta {
@@ -877,6 +894,170 @@ body.resizing * {
   text-align: center;
   color: var(--text-secondary);
   padding: var(--space-4xl);
+}
+
+.reading-body .article-content {
+  /* Ensure scraped content inherits reading styles */
+  line-height: inherit;
+  color: inherit;
+}
+
+.reading-body .article-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  margin: var(--space-xl) 0;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+}
+
+.reading-body .article-content img:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+.reading-body .article-content a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: var(--transition-fast);
+}
+
+.reading-body .article-content a:hover {
+  border-bottom-color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.reading-body .article-content p {
+  margin-bottom: var(--space-2xl);
+  text-align: justify;
+}
+
+.reading-body .article-content h1,
+.reading-body .article-content h2,
+.reading-body .article-content h3,
+.reading-body .article-content h4,
+.reading-body .article-content h5,
+.reading-body .article-content h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin: var(--space-3xl) 0 var(--space-xl) 0;
+}
+
+.reading-body .article-content blockquote {
+  margin: var(--space-2xl) 0;
+  padding: var(--space-xl) var(--space-2xl);
+  border-left: 4px solid var(--accent-primary);
+  background: var(--bg-tertiary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-style: italic;
+}
+
+.reading-body .article-content pre,
+.reading-body .article-content code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: var(--font-size-sm);
+}
+
+.reading-body .article-content code {
+  background: var(--bg-tertiary);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  color: var(--accent-primary);
+}
+
+.reading-body .article-content pre {
+  background: var(--bg-tertiary);
+  padding: var(--space-xl);
+  margin: var(--space-xl) 0;
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+.reading-body .article-content pre code {
+  background: none;
+  padding: 0;
+  color: var(--text-primary);
+}
+
+.reading-body .article-content ul,
+.reading-body .article-content ol {
+  margin: var(--space-xl) 0;
+  padding-left: var(--space-3xl);
+}
+
+.reading-body .article-content li {
+  margin-bottom: var(--space-md);
+  line-height: 1.6;
+}
+
+.reading-body .article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-2xl) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.reading-body .article-content th,
+.reading-body .article-content td {
+  padding: var(--space-lg);
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reading-body .article-content th {
+  background: var(--bg-tertiary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.reading-body .article-content td {
+  color: var(--text-secondary);
+}
+
+/* OPML Import/Export Styling */
+.opml-section {
+  margin: var(--space-2xl) 0;
+  padding: var(--space-2xl);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+}
+
+.opml-actions {
+  display: flex;
+  gap: var(--space-2xl);
+  align-items: end;
+}
+
+.opml-import,
+.opml-export {
+  flex: 1;
+}
+
+.opml-import {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.opml-import input[type="file"] {
+  margin-bottom: var(--space-md);
+}
+
+.button-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.button-secondary:hover {
+  background: var(--bg-quaternary);
+  border-color: var(--accent-primary);
+}
   background: var(--bg-tertiary);
   border-radius: var(--radius-md);
   border-left: 4px solid #f56565;

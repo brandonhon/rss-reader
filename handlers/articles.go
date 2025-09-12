@@ -22,9 +22,28 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, username string) {
 }
 
 func MarkArticleReadHandler(w http.ResponseWriter, r *http.Request, username string) {
+	userID := GetUserID(username)
 	idStr := r.FormValue("id")
-	id, _ := strconv.Atoi(idStr)
-	DB.Model(&models.Article{}).Where("id=?", id).Update("read", true)
+	articleID, _ := strconv.Atoi(idStr)
+	
+	// Create or update user article record
+	var userArticle models.UserArticle
+	result := DB.Where("user_id = ? AND article_id = ?", userID, articleID).First(&userArticle)
+	
+	if result.Error != nil {
+		// Create new record
+		userArticle = models.UserArticle{
+			UserID:    userID,
+			ArticleID: uint(articleID),
+			Read:      true,
+			Starred:   false,
+		}
+		DB.Create(&userArticle)
+	} else {
+		// Update existing record
+		DB.Model(&userArticle).Update("read", true)
+	}
+	
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -71,26 +90,44 @@ func GetArticleContentHandler(w http.ResponseWriter, r *http.Request, username s
 }
 
 func StarArticleHandler(w http.ResponseWriter, r *http.Request, username string) {
+	userID := GetUserID(username)
 	r.ParseForm()
 	idStr := r.FormValue("id")
 	starredStr := r.FormValue("starred")
 	
-	id, _ := strconv.Atoi(idStr)
+	articleID, _ := strconv.Atoi(idStr)
 	starred := starredStr == "true"
 	
-	// Verify user owns this article through feed->category relationship
-	var article models.Article
-	err := DB.Joins("JOIN feeds ON feeds.id = articles.feed_id").
-		Joins("JOIN categories ON categories.id = feeds.category_id").
-		Where("articles.id = ? AND categories.user_id = ?", id, GetUserID(username)).
-		First(&article).Error
+	// Verify user has access to this article through their feed subscriptions
+	var count int64
+	DB.Table("articles").
+		Joins("JOIN feeds ON feeds.id = articles.feed_id").
+		Joins("JOIN user_feeds ON user_feeds.feed_id = feeds.id").
+		Where("articles.id = ? AND user_feeds.user_id = ?", articleID, userID).
+		Count(&count)
 	
-	if err != nil {
+	if count == 0 {
 		http.Error(w, "Article not found", http.StatusNotFound)
 		return
 	}
 	
-	DB.Model(&article).Update("starred", starred)
+	// Create or update user article record
+	var userArticle models.UserArticle
+	result := DB.Where("user_id = ? AND article_id = ?", userID, articleID).First(&userArticle)
+	
+	if result.Error != nil {
+		// Create new record
+		userArticle = models.UserArticle{
+			UserID:    userID,
+			ArticleID: uint(articleID),
+			Read:      false,
+			Starred:   starred,
+		}
+		DB.Create(&userArticle)
+	} else {
+		// Update existing record
+		DB.Model(&userArticle).Update("starred", starred)
+	}
 	
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{

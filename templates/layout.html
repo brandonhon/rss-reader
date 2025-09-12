@@ -47,10 +47,7 @@
                     </button>
                     <div id="user-menu" class="user-dropdown hidden">
                         <button class="dropdown-item" onclick="openManageFeeds()">
-                            ➕ Add Feed
-                        </button>
-                        <button class="dropdown-item" onclick="openManageFeeds()">
-                            Manage Feeds
+                            ⚙️ Manage Feeds
                         </button>
                         <button class="dropdown-item" onclick="logout()">
                             Logout
@@ -111,7 +108,7 @@
     <div id="manage-feeds-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Add RSS Feed</h2>
+                <h2 class="modal-title">Manage RSS Feeds</h2>
             </div>
             
             <form id="add-feed-form">
@@ -136,6 +133,24 @@
                     </button>
                 </div>
             </form>
+            
+            <div class="opml-section">
+                <h3 class="section-title">Import/Export</h3>
+                <div class="opml-actions">
+                    <div class="opml-import">
+                        <label for="opml-file" class="form-label">Import OPML</label>
+                        <input type="file" id="opml-file" accept=".opml,.xml" class="form-input">
+                        <button type="button" id="import-opml-btn" class="button button-secondary">
+                            📁 Import OPML
+                        </button>
+                    </div>
+                    <div class="opml-export">
+                        <button type="button" id="export-opml-btn" class="button button-secondary">
+                            💾 Export OPML
+                        </button>
+                    </div>
+                </div>
+            </div>
             
             <div id="feeds-management" class="feeds-management">
                 <h3 class="section-title">Current Feeds</h3>

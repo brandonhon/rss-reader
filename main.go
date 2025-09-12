@@ -78,6 +78,8 @@ func main() {
 	r.HandleFunc("/list-feeds", handlers.AuthMiddleware(handlers.ListFeedsHandler)).Methods("GET")
 	r.HandleFunc("/delete-feed", handlers.AuthMiddleware(handlers.DeleteFeedHandler)).Methods("DELETE")
 	r.HandleFunc("/create-category", handlers.AuthMiddleware(handlers.CreateCategoryHandler)).Methods("POST")
+	r.HandleFunc("/import-opml", handlers.AuthMiddleware(handlers.ImportOPMLHandler)).Methods("POST")
+	r.HandleFunc("/export-opml", handlers.AuthMiddleware(handlers.ExportOPMLHandler)).Methods("GET")
 
 
 

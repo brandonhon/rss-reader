@@ -112,10 +112,16 @@ class ArticleManager {
         const starredClass = article.Starred ? 'starred' : '';
         const starIcon = article.Starred ? '⭐' : '☆';
         
+        // Get favicon URL, fallback to a default icon if not available
+        const faviconURL = article.FaviconURL || '/static/default-favicon.svg';
+        
         return `
             <div class="article-item ${readClass} ${activeClass} ${starredClass}" data-id="${article.ID}">
                 <div class="article-header">
-                    <div class="article-source">RSS Feed</div>
+                    <div class="article-source">
+                        <img class="article-favicon" src="${faviconURL}" alt="Site icon" onerror="this.src='/static/default-favicon.svg'">
+                        <span class="source-name">${article.feed_title || 'RSS Feed'}</span>
+                    </div>
                     <div class="article-meta">
                         <button class="star-button" onclick="event.stopPropagation(); articleManager.toggleStar(${article.ID})" title="${article.Starred ? 'Unstar' : 'Star'} article">
                             ${starIcon}
@@ -170,12 +176,12 @@ class ArticleManager {
         `;
         
         try {
-            // Fetch full article data including content
+            // Fetch full article data including sanitized content
             const response = await fetch(`/article?id=${article.ID}`);
             if (response.ok) {
                 const fullArticle = await response.json();
                 
-                // Display the article content
+                // Display the sanitized article content
                 const content = fullArticle.Content || 'No content available for this article.';
                 readingPanel.innerHTML = `
                     <div class="reading-header">
@@ -186,7 +192,9 @@ class ArticleManager {
                         </div>
                     </div>
                     <div class="reading-body">
-                        ${content}
+                        <div class="article-content">
+                            ${content}
+                        </div>
                     </div>
                 `;
             } else {
@@ -482,6 +490,71 @@ class FeedManager {
         }
     }
     
+    async importOPML(file) {
+        const formData = new FormData();
+        formData.append('opml', file);
+        
+        try {
+            const response = await fetch('/import-opml', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                let message = `Successfully imported ${result.imported} out of ${result.total} feeds.`;
+                
+                if (result.failed && result.failed.length > 0) {
+                    message += `\n\nFailed to import:\n${result.failed.join('\n')}`;
+                }
+                
+                alert(message);
+                
+                // Refresh the feeds list and categories
+                await this.loadCurrentFeeds();
+                await categoryManager.loadCategories();
+                await articleManager.loadArticles(currentFilter, selectedCategory?.ID);
+                
+                return true;
+            } else {
+                const error = await response.text();
+                this.showError('Import failed: ' + error);
+                return false;
+            }
+        } catch (error) {
+            console.error('Failed to import OPML:', error);
+            this.showError('Failed to import OPML: ' + error.message);
+            return false;
+        }
+    }
+    
+    async exportOPML() {
+        try {
+            const response = await fetch('/export-opml');
+            
+            if (response.ok) {
+                // Create download link
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'feeds.opml';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                this.showSuccess('OPML exported successfully');
+            } else {
+                const error = await response.text();
+                this.showError('Export failed: ' + error);
+            }
+        } catch (error) {
+            console.error('Failed to export OPML:', error);
+            this.showError('Failed to export OPML: ' + error.message);
+        }
+    }
+    
     showSuccess(message) {
         // Simple success feedback - could be improved with a toast system
         console.log('Success:', message);
@@ -640,6 +713,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('feed-url').value = '';
             document.getElementById('category').value = '';
         }
+    });
+    
+    // OPML import handler
+    document.getElementById('import-opml-btn').addEventListener('click', async () => {
+        const fileInput = document.getElementById('opml-file');
+        const file = fileInput.files[0];
+        
+        if (!file) {
+            alert('Please select an OPML file to import');
+            return;
+        }
+        
+        if (!file.name.toLowerCase().endsWith('.opml') && !file.name.toLowerCase().endsWith('.xml')) {
+            alert('Please select a valid OPML file (.opml or .xml)');
+            return;
+        }
+        
+        const success = await feedManager.importOPML(file);
+        if (success) {
+            fileInput.value = ''; // Clear file input
+        }
+    });
+    
+    // OPML export handler  
+    document.getElementById('export-opml-btn').addEventListener('click', () => {
+        feedManager.exportOPML();
     });
     
     // Close modal when clicking outside
