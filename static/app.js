@@ -64,16 +64,19 @@ class ArticleManager {
             let url = '/user-feeds';
             const params = new URLSearchParams();
             
-            if (filter === 'fresh') params.append('filter', 'fresh');
-            else if (filter === 'starred') params.append('filter', 'starred');
+            // Don't apply server-side filters, we'll do client-side filtering
             if (categoryId) params.append('category', categoryId);
             
             if (params.toString()) url += '?' + params.toString();
             
             const response = await fetch(url);
             this.articles = await response.json();
-            this.filteredArticles = this.articles;
-            this.render();
+            
+            // Store current filter for applyFilters
+            currentFilter = filter;
+            
+            // Apply all filters (search, read status, starred, etc.)
+            this.applyFilters();
         } catch (error) {
             console.error('Failed to load articles:', error);
             this.showError('Failed to load articles');
@@ -108,29 +111,34 @@ class ArticleManager {
         const publishedDate = new Date(article.Published);
         const timeAgo = this.formatTimeAgo(publishedDate);
         const readClass = article.Read ? 'read' : '';
-        const activeClass = selectedArticle?.ID == article.ID ? 'active' : '';
-        const starredClass = article.Starred ? 'starred' : '';
-        const starIcon = article.Starred ? '⭐' : '☆';
+        const selectedClass = selectedArticle?.ID == article.ID ? 'selected' : '';
         
         // Get favicon URL, fallback to a default icon if not available
         const faviconURL = article.FaviconURL || '/static/default-favicon.svg';
         
+        // Create a simple excerpt from the first part of the content
+        let excerpt = '';
+        if (article.Content) {
+            const div = document.createElement('div');
+            div.innerHTML = article.Content;
+            const textContent = div.textContent || div.innerText || '';
+            excerpt = textContent.substring(0, 140) + (textContent.length > 140 ? '...' : '');
+        }
+        
         return `
-            <div class="article-item ${readClass} ${activeClass} ${starredClass}" data-id="${article.ID}">
-                <div class="article-header">
-                    <div class="article-source">
-                        <img class="article-favicon" src="${faviconURL}" alt="Site icon" onerror="this.src='/static/default-favicon.svg'">
-                        <span class="source-name">${article.feed_title || 'RSS Feed'}</span>
-                    </div>
-                    <div class="article-meta">
-                        <button class="star-button" onclick="event.stopPropagation(); articleManager.toggleStar(${article.ID})" title="${article.Starred ? 'Unstar' : 'Star'} article">
-                            ${starIcon}
-                        </button>
-                        <div class="article-time">${timeAgo}</div>
-                    </div>
+            <div class="article-item ${readClass} ${selectedClass}" data-id="${article.ID}">
+                <div class="article-meta">
+                    <img class="article-favicon" src="${faviconURL}" alt="Site icon" onerror="this.src='/static/default-favicon.svg'">
+                    <span class="article-feed">${article.feed_title || 'RSS Feed'}</span>
+                    <span class="article-date">${timeAgo}</span>
                 </div>
                 <h3 class="article-title">${this.escapeHtml(article.Title)}</h3>
-                <p class="article-excerpt">Click to read this article...</p>
+                ${excerpt ? `<p class="article-summary">${this.escapeHtml(excerpt)}</p>` : ''}
+                <div class="article-actions">
+                    <button class="article-action ${article.Starred ? 'starred' : ''}" onclick="event.stopPropagation(); articleManager.toggleStar(${article.ID})" title="${article.Starred ? 'Unstar' : 'Star'} article">
+                        ${article.Starred ? '★' : '☆'}
+                    </button>
+                </div>
             </div>
         `;
     }
@@ -161,16 +169,17 @@ class ArticleManager {
     async showArticleContent(article) {
         const readingPanel = document.querySelector('.reading-panel .reading-content');
         
-        // Show loading state
+        // Show loading state with new CSS structure
         readingPanel.innerHTML = `
-            <div class="reading-header">
-                <h1 class="reading-title">${this.escapeHtml(article.Title)}</h1>
-                <div class="reading-meta">
-                    <span>Published ${this.formatDate(new Date(article.Published))}</span>
-                    <a href="${article.Link}" target="_blank" style="color: var(--accent-primary)">View Original</a>
+            <div class="article-header">
+                <h1 class="article-title">${this.escapeHtml(article.Title)}</h1>
+                <div class="article-meta">
+                    <img class="article-favicon" src="${article.FaviconURL || '/static/default-favicon.svg'}" alt="Site icon" onerror="this.src='/static/default-favicon.svg'">
+                    <span class="article-feed">${article.feed_title || 'RSS Feed'}</span>
+                    <span class="article-date">${this.formatDate(new Date(article.Published))}</span>
                 </div>
             </div>
-            <div class="reading-body">
+            <div class="article-body">
                 <div class="loading">Loading article content...</div>
             </div>
         `;
@@ -191,10 +200,8 @@ class ArticleManager {
                             <a href="${fullArticle.Link}" target="_blank" style="color: var(--accent-primary)">View Original</a>
                         </div>
                     </div>
-                    <div class="reading-body">
-                        <div class="article-content">
-                            ${content}
-                        </div>
+                    <div class="article-body">
+                        ${content}
                     </div>
                 `;
             } else {
@@ -210,7 +217,7 @@ class ArticleManager {
                         <a href="${article.Link}" target="_blank" style="color: var(--accent-primary)">View Original</a>
                     </div>
                 </div>
-                <div class="reading-body">
+                <div class="article-body">
                     <div class="error">Failed to load article content. <a href="${article.Link}" target="_blank">Read the original article</a></div>
                 </div>
             `;
@@ -839,3 +846,87 @@ function initPanelResizing() {
         if (isResizing) e.preventDefault();
     });
 }
+
+// Search functionality
+let searchTerm = '';
+
+function searchArticles(term) {
+    searchTerm = term.toLowerCase();
+    if (articleManager) {
+        articleManager.applyFilters();
+    }
+}
+
+// Update the ArticleManager to handle search
+ArticleManager.prototype.applyFilters = function() {
+    let filtered = this.articles;
+    
+    // Apply search filter
+    if (searchTerm) {
+        filtered = filtered.filter(article => 
+            article.Title.toLowerCase().includes(searchTerm) || 
+            (article.Content && article.Content.toLowerCase().includes(searchTerm)) ||
+            (article.feed_title && article.feed_title.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    // Apply current filter (all/unread/starred)
+    switch (currentFilter) {
+        case 'fresh':
+            filtered = filtered.filter(article => !article.Read);
+            break;
+        case 'starred':
+            filtered = filtered.filter(article => article.Starred);
+            break;
+    }
+    
+    // Apply category filter
+    if (selectedCategory) {
+        // This would need category-based filtering logic
+    }
+    
+    this.filteredArticles = filtered;
+    this.render();
+};
+
+// Preferences modal functions
+function openPreferences() {
+    const modal = document.getElementById('preferences-modal');
+    modal.classList.remove('hidden');
+    updateThemeButtons();
+    
+    // Close user menu
+    const userMenu = document.getElementById('user-menu');
+    userMenu.classList.add('hidden');
+}
+
+function closePreferences() {
+    const modal = document.getElementById('preferences-modal');
+    modal.classList.add('hidden');
+}
+
+function updateThemeButtons() {
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    const lightBtn = document.getElementById('theme-light');
+    const darkBtn = document.getElementById('theme-dark');
+    
+    if (lightBtn && darkBtn) {
+        // Reset button styles
+        lightBtn.className = 'button button-secondary';
+        darkBtn.className = 'button button-secondary';
+        
+        // Highlight current theme
+        if (currentTheme === 'light') {
+            lightBtn.className = 'button button-primary';
+        } else {
+            darkBtn.className = 'button button-primary';
+        }
+    }
+}
+
+// Close modals when clicking outside
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal')) {
+        e.target.classList.add('hidden');
+    }
+});
