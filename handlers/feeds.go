@@ -26,11 +26,12 @@ func CategoriesHandler(w http.ResponseWriter, r *http.Request, username string) 
 	
 	var result []CategoryWithCount
 	for _, cat := range categories {
-		// Count unread articles in this category
+		// Count unread articles in this category using the new schema
 		var unreadCount int64
 		DB.Model(&models.Article{}).
-			Joins("JOIN feeds ON feeds.id = articles.feed_id").
-			Where("feeds.category_id = ? AND articles.read = ?", cat.ID, false).
+			Joins("JOIN user_feeds ON user_feeds.feed_id = articles.feed_id").
+			Joins("LEFT JOIN user_articles ON user_articles.article_id = articles.id AND user_articles.user_id = ?", userID).
+			Where("user_feeds.category_id = ? AND user_feeds.user_id = ? AND (user_articles.read IS NULL OR user_articles.read = ?)", cat.ID, userID, false).
 			Count(&unreadCount)
 		
 		result = append(result, CategoryWithCount{

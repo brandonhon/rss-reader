@@ -17,7 +17,9 @@ This is a Go-based RSS reader web application that allows users to organize RSS 
 
 **Current Version**: v0.3.0 (Visual Enhancement Update)
 
-1. **Update version in CLAUDE.md**:
+**Version updates should ONLY occur when main.go is modified**. Changes to other files (CSS, JavaScript, templates, documentation) do not require version bumps.
+
+1. **Update version in CLAUDE.md** (only if main.go changed):
    ```bash
    # Edit CLAUDE.md and update the Current Version line
    **Current Version**: v1.x.x (Description)

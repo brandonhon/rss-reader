@@ -31,7 +31,7 @@
   /* Layout - Default sizes */
   --sidebar-width: 280px;
   --article-list-width: 380px;
-  --resize-handle-width: 4px;
+  --resize-handle-width: 8px;
 }
 
 /* Light theme (default) - Improved for better contrast and eye comfort */
@@ -944,14 +944,33 @@ body {
 /* Resize handles */
 .resize-handle {
   width: var(--resize-handle-width);
-  background-color: var(--border-light);
+  background-color: var(--border-color);
   cursor: col-resize;
   transition: var(--transition);
   flex-shrink: 0;
+  position: relative;
+}
+
+.resize-handle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 20px;
+  background-color: var(--text-tertiary);
+  border-radius: 1px;
+  opacity: 0.5;
 }
 
 .resize-handle:hover {
+  background-color: var(--bg-hover);
+}
+
+.resize-handle:hover::before {
   background-color: var(--accent-color);
+  opacity: 1;
 }
 
 .resize-handle.resizing {
