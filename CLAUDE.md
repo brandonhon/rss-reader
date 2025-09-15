@@ -6,6 +6,43 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Go-based RSS reader web application that allows users to organize RSS feeds into categories, read articles, and mark them as read/starred. The application uses GORM with SQLite for persistence, Gorilla Mux for routing, and HTML templates for the frontend.
 
+### Release and Distribution
+- Releases are triggered by semantic version tags (v1.0.0, v1.2.3, etc.)
+- Multi-platform binaries are built via GitHub Actions
+- Docker images are published to GitHub Container Registry
+- Binary artifacts are packaged as `platform-arch.tar.gz` (e.g., `linux-amd64.tar.gz`)
+
+#### Version Management
+**IMPORTANT**: This project uses semantic versioning. ALWAYS follow this process for releases:
+
+**Current Version**: v0.3.0 (Visual Enhancement Update)
+
+1. **Update version in CLAUDE.md**:
+   ```bash
+   # Edit CLAUDE.md and update the Current Version line
+   **Current Version**: v1.x.x (Description)
+   ```
+
+2. **Commit version change**:
+   ```bash
+   git add CLAUDE.md
+   git commit -m "chore: bump version to v1.x.x for [feature/fix] release"
+   git push origin main
+   ```
+
+3. **Create and push semantic version tag**:
+   ```bash
+   git tag -a v1.x.x -m "Release v1.x.x: [Description]"
+   git push origin v1.x.x
+   ```
+
+**Version Bump Guidelines**:
+- **Patch** (1.0.0 → 1.0.1): Bug fixes, documentation updates
+- **Minor** (1.0.0 → 1.1.0): New features, enhancements (backward compatible)  
+- **Major** (1.0.0 → 2.0.0): Breaking changes, major rewrites
+
+**❌ NEVER use date-based tags** like `v2025.09.14-abc123` - only semantic versions!
+
 ## Development Commands
 
 ### Build and Run
