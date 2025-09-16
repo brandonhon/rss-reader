@@ -318,8 +318,14 @@ class CategoryManager {
     
     async loadCategories() {
         try {
-            const response = await fetch('/categories');
+            const response = await fetch('/categories', {
+                credentials: 'include'
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
             this.categories = await response.json();
+            console.log('Loaded categories:', this.categories);
             this.render();
         } catch (error) {
             console.error('Failed to load categories:', error);
@@ -328,6 +334,12 @@ class CategoryManager {
     
     render() {
         const container = document.getElementById('category-list');
+        console.log('Rendering categories:', this.categories, 'Container:', container);
+        
+        if (!container) {
+            console.error('Category list container not found!');
+            return;
+        }
         
         if (this.categories.length === 0) {
             container.innerHTML = `
@@ -689,10 +701,7 @@ function logout() {
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
-    // Theme toggle handler
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-        themeManager.toggle();
-    });
+    // Theme is now handled in preferences modal - no standalone toggle needed
     
     // Toolbar filter handlers
     document.querySelectorAll('.toolbar-button').forEach(btn => {
@@ -891,13 +900,12 @@ ArticleManager.prototype.applyFilters = function() {
 
 // Preferences modal functions
 function openPreferences() {
-    const modal = document.getElementById('preferences-modal');
-    modal.classList.remove('hidden');
-    updateThemeButtons();
-    
     // Close user menu
     const userMenu = document.getElementById('user-menu');
     userMenu.classList.add('hidden');
+    
+    // Navigate to preferences page
+    window.location.href = '/preferences';
 }
 
 function closePreferences() {

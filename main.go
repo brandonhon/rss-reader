@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"html/template"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -39,11 +40,19 @@ func createInitialUser() {
 }
 
 func main() {
+	// Get database file from environment variable or use default
+	dbFile := os.Getenv("DB_FILE")
+	if dbFile == "" {
+		dbFile = "rss_reader.db"
+	}
+	
 	var err error
-	db, err = gorm.Open(sqlite.Open("rss_reader.db"), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open(dbFile), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	fmt.Printf("Using database: %s\n", dbFile)
 
 	if err := models.Migrate(db); err != nil {
 		log.Fatal(err)
@@ -65,6 +74,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", handlers.AuthMiddleware(handlers.IndexHandler)).Methods("GET")
+	r.HandleFunc("/preferences", handlers.AuthMiddleware(handlers.PreferencesHandler)).Methods("GET")
 	r.HandleFunc("/login", handlers.LoginHandler).Methods("GET", "POST")
 	r.HandleFunc("/logout", handlers.LogoutHandler).Methods("GET")
 	r.HandleFunc("/mark-read", handlers.AuthMiddleware(handlers.MarkArticleReadHandler)).Methods("POST")
@@ -76,8 +86,10 @@ func main() {
 	r.HandleFunc("/user-feeds", handlers.AuthMiddleware(handlers.UserFeedsHandler)).Methods("GET")
 	r.HandleFunc("/add-feed", handlers.AuthMiddleware(handlers.AddFeedHandler)).Methods("POST")
 	r.HandleFunc("/list-feeds", handlers.AuthMiddleware(handlers.ListFeedsHandler)).Methods("GET")
-	r.HandleFunc("/delete-feed", handlers.AuthMiddleware(handlers.DeleteFeedHandler)).Methods("DELETE")
+	r.HandleFunc("/delete-feed", handlers.AuthMiddleware(handlers.DeleteFeedHandler)).Methods("POST")
 	r.HandleFunc("/create-category", handlers.AuthMiddleware(handlers.CreateCategoryHandler)).Methods("POST")
+	r.HandleFunc("/add-category", handlers.AuthMiddleware(handlers.AddCategoryHandler)).Methods("POST")
+	r.HandleFunc("/system-info", handlers.AuthMiddleware(handlers.SystemInfoHandler)).Methods("GET")
 	r.HandleFunc("/import-opml", handlers.AuthMiddleware(handlers.ImportOPMLHandler)).Methods("POST")
 	r.HandleFunc("/export-opml", handlers.AuthMiddleware(handlers.ExportOPMLHandler)).Methods("GET")
 
