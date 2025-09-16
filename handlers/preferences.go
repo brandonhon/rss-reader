@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"time"
 	"rss-reader/models"
 )
@@ -78,49 +77,3 @@ func SystemInfoHandler(w http.ResponseWriter, r *http.Request, username string) 
 	json.NewEncoder(w).Encode(data)
 }
 
-// DeleteFeedHandler removes a feed subscription for the user
-func DeleteFeedHandler(w http.ResponseWriter, r *http.Request, username string) {
-	userID := GetUserID(username)
-	feedIDStr := r.FormValue("id")
-	
-	if feedIDStr == "" {
-		http.Error(w, "Feed ID is required", http.StatusBadRequest)
-		return
-	}
-	
-	feedID, err := strconv.ParseUint(feedIDStr, 10, 32)
-	if err != nil {
-		http.Error(w, "Invalid feed ID", http.StatusBadRequest)
-		return
-	}
-	
-	// Find user's subscription to this feed
-	var userFeed models.UserFeed
-	err = DB.Where("user_id = ? AND feed_id = ?", userID, feedID).First(&userFeed).Error
-	if err != nil {
-		http.Error(w, "Feed subscription not found", http.StatusNotFound)
-		return
-	}
-	
-	// Delete the user's subscription
-	DB.Delete(&userFeed)
-	
-	// Delete user's article relationships for this feed
-	DB.Where("user_id = ? AND article_id IN (SELECT id FROM articles WHERE feed_id = ?)", userID, feedID).Delete(&models.UserArticle{})
-	
-	// Check if any other users are subscribed to this feed
-	var count int64
-	DB.Model(&models.UserFeed{}).Where("feed_id = ?", feedID).Count(&count)
-	
-	if count == 0 {
-		// No other users subscribed, we can safely delete the feed and its articles
-		DB.Where("feed_id = ?", feedID).Delete(&models.Article{})
-		DB.Delete(&models.Feed{}, feedID)
-	}
-	
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"success": true,
-		"message": "Feed subscription removed successfully",
-	})
-}

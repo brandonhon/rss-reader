@@ -280,7 +280,11 @@ func ListFeedsHandler(w http.ResponseWriter, r *http.Request, username string) {
 // DeleteFeedHandler removes a user's subscription to a feed
 func DeleteFeedHandler(w http.ResponseWriter, r *http.Request, username string) {
 	userID := GetUserID(username)
+	// Check both query parameters and form data for feed ID
 	feedIDStr := r.URL.Query().Get("id")
+	if feedIDStr == "" {
+		feedIDStr = r.FormValue("id")
+	}
 	
 	if feedIDStr == "" {
 		http.Error(w, "Feed ID is required", http.StatusBadRequest)
