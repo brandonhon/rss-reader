@@ -160,9 +160,15 @@
                     </div>
 
                     <div class="settings-section">
-                        <h3 class="section-title">My Feeds</h3>
-                        <div id="feeds-by-category" class="feeds-container">
-                            <!-- Feeds will be populated by JavaScript -->
+                        <h3 class="section-title">Category Management</h3>
+                        <div class="category-management">
+                            <div id="categories-list" class="categories-container">
+                                <!-- Categories will be populated by JavaScript -->
+                            </div>
+                            <button class="btn btn-outline" onclick="openAddCategoryModal()">
+                                <span class="btn-icon">📁</span>
+                                Add Category
+                            </button>
                         </div>
                     </div>
 
@@ -188,15 +194,9 @@
                     </div>
 
                     <div class="settings-section">
-                        <h3 class="section-title">Category Management</h3>
-                        <div class="category-management">
-                            <div id="categories-list" class="categories-container">
-                                <!-- Categories will be populated by JavaScript -->
-                            </div>
-                            <button class="btn btn-outline" onclick="openAddCategoryModal()">
-                                <span class="btn-icon">📁</span>
-                                Add Category
-                            </button>
+                        <h3 class="section-title">My Feeds</h3>
+                        <div id="feeds-by-category" class="feeds-container feeds-scrollable">
+                            <!-- Feeds will be populated by JavaScript -->
                         </div>
                     </div>
                 </div>
