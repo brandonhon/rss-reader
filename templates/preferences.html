@@ -3,283 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preferences - RSS Reader</title>
+    <title>FeedFlow - Preferences</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/preferences.css">
 </head>
 <body>
     <div class="preferences-container">
         <!-- Header -->
-        <header class="preferences-header">
+        <div class="preferences-header">
             <div class="header-content">
-                <div class="header-left">
-                    <a href="/" class="back-button">
-                        <span class="back-icon">←</span>
-                        <span>Back to Reader</span>
+                <div>
+                    <a href="/" class="back-link">
+                        <span>←</span>
+                        <span>Back to FeedFlow</span>
                     </a>
-                    <h1 class="preferences-title">Preferences</h1>
+                    <h1 class="header-title">Preferences</h1>
+                    <p class="header-subtitle">Customize your FeedFlow experience</p>
                 </div>
-                <div class="header-right">
-                    <span class="user-info">{{.Username}}</span>
+                <div class="save-indicator" id="saveIndicator">
+                    ✓ Saved automatically
                 </div>
             </div>
-        </header>
+        </div>
 
-        <!-- Main Content -->
+        <!-- Navigation -->
+        <div class="preferences-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="general">
+                    <span class="tab-icon">⚙️</span>
+                    <span>General</span>
+                </button>
+                <button class="nav-tab" data-tab="appearance">
+                    <span class="tab-icon">🎨</span>
+                    <span>Appearance</span>
+                </button>
+                <button class="nav-tab" data-tab="feeds">
+                    <span class="tab-icon">📰</span>
+                    <span>Feeds</span>
+                </button>
+                <button class="nav-tab" data-tab="notifications">
+                    <span class="tab-icon">🔔</span>
+                    <span>Notifications</span>
+                </button>
+                <button class="nav-tab" data-tab="account">
+                    <span class="tab-icon">👤</span>
+                    <span>Account</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Content -->
         <div class="preferences-content">
-            <!-- Navigation Sidebar -->
-            <nav class="preferences-nav">
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <button class="nav-button active" data-tab="general">
-                            <span class="nav-icon">⚙️</span>
-                            <span class="nav-label">General</span>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-button" data-tab="feeds">
-                            <span class="nav-icon">📡</span>
-                            <span class="nav-label">Feeds</span>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-button" data-tab="users">
-                            <span class="nav-icon">👥</span>
-                            <span class="nav-label">Users</span>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-button" data-tab="system">
-                            <span class="nav-icon">🖥️</span>
-                            <span class="nav-label">System</span>
-                        </button>
-                    </li>
-                </ul>
-            </nav>
-
-            <!-- Tab Content -->
-            <main class="preferences-main">
-                <!-- General Tab -->
-                <div class="tab-content active" id="general-tab">
-                    <div class="tab-header">
-                        <h2 class="tab-title">General Preferences</h2>
-                        <p class="tab-description">Configure general application settings</p>
+            <!-- General Tab -->
+            <div class="tab-panel active" id="general-tab">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">General Settings</h2>
+                        <p class="section-description">Configure basic application behavior and preferences</p>
                     </div>
 
-                    <div class="settings-section">
-                        <h3 class="section-title">Appearance</h3>
-                        <div class="setting-group">
-                            <label class="setting-label">Theme</label>
-                            <div class="setting-control">
-                                <div class="theme-options">
-                                    <button class="theme-option" data-theme="light">
-                                        <span class="theme-icon">☀️</span>
-                                        <span class="theme-name">Light</span>
-                                    </button>
-                                    <button class="theme-option" data-theme="dark">
-                                        <span class="theme-icon">🌙</span>
-                                        <span class="theme-name">Dark</span>
-                                    </button>
-                                    <button class="theme-option" data-theme="auto">
-                                        <span class="theme-icon">🌓</span>
-                                        <span class="theme-name">Auto</span>
-                                    </button>
+                    <div class="form-group">
+                        <label class="form-label">Default View</label>
+                        <p class="form-description">Choose what you see when opening FeedFlow</p>
+                        <select class="form-select">
+                            <option value="all">All Articles</option>
+                            <option value="unread">Unread Articles</option>
+                            <option value="starred">Starred Articles</option>
+                            <option value="today">Today's Articles</option>
+                        </select>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Auto-mark as read</div>
+                            <div class="toggle-description">Automatically mark articles as read when opened</div>
+                        </div>
+                        <div class="toggle-switch active">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Show article previews</div>
+                            <div class="toggle-description">Display article excerpts in the list view</div>
+                        </div>
+                        <div class="toggle-switch active">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Keyboard shortcuts</div>
+                            <div class="toggle-description">Enable keyboard navigation and shortcuts</div>
+                        </div>
+                        <div class="toggle-switch active">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appearance Tab -->
+            <div class="tab-panel" id="appearance-tab">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Theme</h2>
+                        <p class="section-description">Choose your preferred color scheme</p>
+                    </div>
+
+                    <div class="theme-previews">
+                        <div class="theme-preview theme-light active">
+                            <div class="theme-header">
+                                <div class="theme-dot"></div>
+                                <div class="theme-dot"></div>
+                                <div class="theme-dot"></div>
+                            </div>
+                            <div class="theme-body">
+                                <div class="theme-sidebar"></div>
+                                <div class="theme-content">
+                                    <div class="theme-line" style="width: 80%;"></div>
+                                    <div class="theme-line" style="width: 60%;"></div>
+                                    <div class="theme-line" style="width: 90%;"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="setting-group">
-                            <label class="setting-label" for="language-select">Language</label>
-                            <div class="setting-control">
-                                <select id="language-select" class="setting-select">
-                                    <option value="en" selected>English</option>
-                                    <option value="es">Español</option>
-                                    <option value="fr">Français</option>
-                                    <option value="de">Deutsch</option>
-                                    <option value="it">Italiano</option>
-                                    <option value="pt">Português</option>
-                                    <option value="ja">日本語</option>
-                                    <option value="zh">中文</option>
-                                </select>
+                        <div class="theme-preview theme-dark">
+                            <div class="theme-header">
+                                <div class="theme-dot"></div>
+                                <div class="theme-dot"></div>
+                                <div class="theme-dot"></div>
                             </div>
-                        </div>
-
-                        <div class="setting-group">
-                            <label class="setting-label" for="timezone-select">Time Zone</label>
-                            <div class="setting-control">
-                                <select id="timezone-select" class="setting-select">
-                                    <option value="UTC">UTC</option>
-                                    <option value="America/New_York">Eastern Time (US)</option>
-                                    <option value="America/Chicago">Central Time (US)</option>
-                                    <option value="America/Denver">Mountain Time (US)</option>
-                                    <option value="America/Los_Angeles" selected>Pacific Time (US)</option>
-                                    <option value="Europe/London">London</option>
-                                    <option value="Europe/Paris">Paris</option>
-                                    <option value="Europe/Berlin">Berlin</option>
-                                    <option value="Asia/Tokyo">Tokyo</option>
-                                    <option value="Asia/Shanghai">Shanghai</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3 class="section-title">Updates</h3>
-                        <div class="setting-group">
-                            <label class="setting-label" for="update-interval">Default Update Interval</label>
-                            <div class="setting-control">
-                                <select id="update-interval" class="setting-select">
-                                    <option value="5">Every 5 minutes</option>
-                                    <option value="15" selected>Every 15 minutes</option>
-                                    <option value="30">Every 30 minutes</option>
-                                    <option value="60">Every hour</option>
-                                    <option value="240">Every 4 hours</option>
-                                    <option value="720">Every 12 hours</option>
-                                    <option value="1440">Once daily</option>
-                                </select>
+                            <div class="theme-body">
+                                <div class="theme-sidebar"></div>
+                                <div class="theme-content">
+                                    <div class="theme-line" style="width: 80%;"></div>
+                                    <div class="theme-line" style="width: 60%;"></div>
+                                    <div class="theme-line" style="width: 90%;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Feeds Tab -->
-                <div class="tab-content" id="feeds-tab">
-                    <div class="tab-header">
-                        <h2 class="tab-title">Feed Management</h2>
-                        <p class="tab-description">Manage your RSS feeds and subscriptions</p>
-                        <div class="tab-actions">
-                            <button class="btn btn-secondary" onclick="openAddFeedModal()">
-                                <span class="btn-icon">➕</span>
-                                Add Feed
-                            </button>
-                            <button class="btn btn-secondary" onclick="openUnsubscribeModal()">
-                                <span class="btn-icon">🗑️</span>
-                                Unsubscribe
-                            </button>
-                        </div>
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Layout</h2>
+                        <p class="section-description">Customize the interface layout</p>
                     </div>
 
-                    <div class="settings-section">
-                        <h3 class="section-title">Category Management</h3>
-                        <div class="category-management">
-                            <div id="categories-list" class="categories-container">
-                                <!-- Categories will be populated by JavaScript -->
-                            </div>
-                            <button class="btn btn-outline" onclick="openAddCategoryModal()">
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Compact view</div>
+                            <div class="toggle-description">Use smaller spacing and fonts for more content</div>
+                        </div>
+                        <div class="toggle-switch">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feeds Tab -->
+            <div class="tab-panel" id="feeds-tab">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Category Management</h2>
+                        <p class="section-description">Organize your feeds into categories</p>
+                    </div>
+
+                    <div id="categories-list" class="categories-container">
+                        <!-- Categories will be populated by JavaScript -->
+                    </div>
+                    <button class="btn btn-outline" onclick="openAddCategoryModal()">
+                        <span class="btn-icon">📁</span>
+                        Add Category
+                    </button>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Import/Export</h2>
+                        <p class="section-description">Manage your feed subscriptions</p>
+                    </div>
+
+                    <div class="import-export-controls">
+                        <div class="control-group">
+                            <button class="btn btn-outline" onclick="exportOPML()">
+                                <span class="btn-icon">💾</span>
+                                Export OPML
+                            </button>
+                            <p class="control-description">Export all your feeds to an OPML file</p>
+                        </div>
+                        <div class="control-group">
+                            <input type="file" id="opml-import-input" accept=".opml,.xml" style="display: none;">
+                            <button class="btn btn-outline" onclick="document.getElementById('opml-import-input').click()">
                                 <span class="btn-icon">📁</span>
-                                Add Category
+                                Import OPML
                             </button>
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3 class="section-title">Import/Export</h3>
-                        <div class="import-export-controls">
-                            <div class="control-group">
-                                <button class="btn btn-outline" onclick="exportOPML()">
-                                    <span class="btn-icon">💾</span>
-                                    Export OPML
-                                </button>
-                                <p class="control-description">Export all your feeds to an OPML file</p>
-                            </div>
-                            <div class="control-group">
-                                <input type="file" id="opml-import-input" accept=".opml,.xml" style="display: none;">
-                                <button class="btn btn-outline" onclick="document.getElementById('opml-import-input').click()">
-                                    <span class="btn-icon">📁</span>
-                                    Import OPML
-                                </button>
-                                <p class="control-description">Import feeds from an OPML file</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3 class="section-title">My Feeds</h3>
-                        <div id="feeds-by-category" class="feeds-container feeds-scrollable">
-                            <!-- Feeds will be populated by JavaScript -->
+                            <p class="control-description">Import feeds from an OPML file</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Users Tab -->
-                <div class="tab-content" id="users-tab">
-                    <div class="tab-header">
-                        <h2 class="tab-title">User Management</h2>
-                        <p class="tab-description">Manage user accounts and permissions</p>
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">My Feeds</h2>
+                        <p class="section-description">Manage your RSS feeds and subscriptions</p>
                     </div>
 
-                    <div class="settings-section">
-                        <h3 class="section-title">Current User</h3>
-                        <div class="user-profile">
-                            <div class="profile-info">
-                                <div class="profile-avatar">{{printf "%.1s" .Username}}</div>
-                                <div class="profile-details">
-                                    <h4 class="profile-name">{{.Username}}</h4>
-                                    <p class="profile-role">Administrator</p>
-                                </div>
-                            </div>
-                            <button class="btn btn-outline">Change Password</button>
-                        </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="openAddFeedModal()">
+                            <span>+</span>
+                            <span>Add New Feed</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="openUnsubscribeModal()">
+                            <span>🗑️</span>
+                            <span>Unsubscribe</span>
+                        </button>
                     </div>
 
-                    <div class="settings-section">
-                        <h3 class="section-title">Account Settings</h3>
-                        <div class="setting-group">
-                            <label class="setting-label">Email Notifications</label>
-                            <div class="setting-control">
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="email-notifications">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
+                    <div id="feeds-by-category" class="feeds-container feeds-scrollable">
+                        <!-- Feeds will be populated by JavaScript -->
                     </div>
                 </div>
 
-                <!-- System Tab -->
-                <div class="tab-content" id="system-tab">
-                    <div class="tab-header">
-                        <h2 class="tab-title">System Information</h2>
-                        <p class="tab-description">System status and configuration</p>
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Update Settings</h2>
+                        <p class="section-description">Configure how often feeds are updated</p>
                     </div>
 
-                    <div class="settings-section">
-                        <h3 class="section-title">Application Info</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">Version</span>
-                                <span class="info-value">v0.3.0</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Database</span>
-                                <span class="info-value">SQLite</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Uptime</span>
-                                <span class="info-value" id="system-uptime">--</span>
-                            </div>
+                    <div class="form-group">
+                        <label class="form-label">Update Interval</label>
+                        <p class="form-description">How often to check for new articles</p>
+                        <select class="form-select">
+                            <option value="5">Every 5 minutes</option>
+                            <option value="15" selected>Every 15 minutes</option>
+                            <option value="30">Every 30 minutes</option>
+                            <option value="60">Every hour</option>
+                            <option value="240">Every 4 hours</option>
+                            <option value="720">Every 12 hours</option>
+                        </select>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Background updates</div>
+                            <div class="toggle-description">Continue updating feeds when the app is in the background</div>
                         </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3 class="section-title">Storage</h3>
-                        <div class="storage-info">
-                            <div class="storage-item">
-                                <span class="storage-label">Articles</span>
-                                <span class="storage-value" id="articles-count">--</span>
-                            </div>
-                            <div class="storage-item">
-                                <span class="storage-label">Feeds</span>
-                                <span class="storage-value" id="feeds-count">--</span>
-                            </div>
-                            <div class="storage-item">
-                                <span class="storage-label">Categories</span>
-                                <span class="storage-value" id="categories-count">--</span>
-                            </div>
+                        <div class="toggle-switch active">
+                            <div class="toggle-slider"></div>
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
+
+            <!-- Notifications Tab -->
+            <div class="tab-panel" id="notifications-tab">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Desktop Notifications</h2>
+                        <p class="section-description">Control when and how you receive notifications</p>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Enable notifications</div>
+                            <div class="toggle-description">Show desktop notifications for new articles</div>
+                        </div>
+                        <div class="toggle-switch active">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Sound alerts</div>
+                            <div class="toggle-description">Play a sound when new articles arrive</div>
+                        </div>
+                        <div class="toggle-switch">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Tab -->
+            <div class="tab-panel" id="account-tab">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Profile</h2>
+                        <p class="section-description">Manage your account information</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-input" value="{{.Username}}" readonly>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary">Update Profile</button>
+                        <button class="btn btn-secondary">Change Password</button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Statistics</h2>
+                        <p class="section-description">Your FeedFlow usage statistics</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="articles-count">--</div>
+                            <div class="stat-label">Total Articles</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="feeds-count">--</div>
+                            <div class="stat-label">Feeds</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="categories-count">--</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="system-uptime">--</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -287,69 +343,42 @@
     <div id="add-feed-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Subscribe to Feed</h3>
-                <button class="modal-close" onclick="closeAddFeedModal()">×</button>
+                <h2 class="modal-title">Add New Feed</h2>
             </div>
-            <form id="add-feed-form" class="modal-body">
-                <div class="form-group">
-                    <label for="feed-url" class="form-label">Feed URL *</label>
-                    <input type="url" id="feed-url" name="url" class="form-input" 
-                           placeholder="https://example.com/rss.xml" required>
-                    <p class="form-help">Enter the RSS/Atom feed URL</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="feed-category" class="form-label">Category *</label>
-                    <select id="feed-category" name="category" class="form-select" required>
-                        <option value="">Select a category</option>
-                        <!-- Categories populated by JavaScript -->
-                    </select>
-                    <p class="form-help">Choose which category to place this feed in</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="feed-update-interval" class="form-label">Update Interval</label>
-                    <select id="feed-update-interval" name="updateInterval" class="form-select">
-                        <option value="0">Use default (15 minutes)</option>
-                        <option value="5">Every 5 minutes</option>
-                        <option value="15">Every 15 minutes</option>
-                        <option value="30">Every 30 minutes</option>
-                        <option value="60">Every hour</option>
-                        <option value="240">Every 4 hours</option>
-                        <option value="720">Every 12 hours</option>
-                        <option value="1440">Once daily</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Authentication (Optional)</label>
-                    <div class="auth-section">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="feed-auth-enabled">
-                            <span class="toggle-slider"></span>
-                            <span class="toggle-label">Requires authentication</span>
+            <div class="modal-body">
+                <form id="add-feed-form">
+                    <div class="form-group">
+                        <label class="form-label">Feed URL</label>
+                        <input type="url" name="url" class="form-input" placeholder="https://example.com/rss.xml" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category" id="feed-category" class="form-select" required>
+                            <option value="">Select a category</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="feed-auth-enabled"> 
+                            Requires Authentication
                         </label>
-                        
-                        <div id="auth-fields" class="auth-fields" style="display: none;">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="feed-username" class="form-label">Username</label>
-                                    <input type="text" id="feed-username" name="username" class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="feed-password" class="form-label">Password</label>
-                                    <input type="password" id="feed-password" name="password" class="form-input">
-                                </div>
-                            </div>
+                    </div>
+                    <div id="auth-fields" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-input">
                         </div>
                     </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeAddFeedModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Subscribe</button>
-                </div>
-            </form>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="closeAddFeedModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Feed</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -357,21 +386,15 @@
     <div id="unsubscribe-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Unsubscribe from Feeds</h3>
-                <button class="modal-close" onclick="closeUnsubscribeModal()">×</button>
+                <h2 class="modal-title">Unsubscribe from Feeds</h2>
             </div>
             <div class="modal-body">
-                <p class="modal-description">Select feeds to unsubscribe from. You can select multiple feeds.</p>
-                
-                <div id="unsubscribe-feeds" class="unsubscribe-container">
-                    <!-- Feed list populated by JavaScript -->
+                <div id="unsubscribe-feeds">
+                    <!-- Feeds will be populated by JavaScript -->
                 </div>
-
-                <div class="modal-actions">
+                <div class="btn-group">
                     <button type="button" class="btn btn-secondary" onclick="closeUnsubscribeModal()">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="unsubscribeSelected()" id="unsubscribe-btn" disabled>
-                        Unsubscribe Selected
-                    </button>
+                    <button type="button" class="btn btn-primary" id="unsubscribe-btn" disabled onclick="unsubscribeSelected()">Unsubscribe Selected</button>
                 </div>
             </div>
         </div>

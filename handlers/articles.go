@@ -9,7 +9,7 @@ import (
 
 func IndexHandler(w http.ResponseWriter, r *http.Request, username string) {
 	categories := []models.Category{}
-	DB.Where("user_id = ?", GetUserID(username)).Preload("Feeds.Articles").Find(&categories)
+	DB.Where("user_id = ?", GetUserID(username)).Find(&categories)
 
 	data := struct {
 		Username   string

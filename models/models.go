@@ -9,16 +9,16 @@ type User struct {
 	ID           uint   `gorm:"primaryKey"`
 	Username     string `gorm:"unique"`
 	PasswordHash string
-	Categories   []Category
-	UserFeeds    []UserFeed
-	UserArticles []UserArticle
+	Categories   []Category    `gorm:"foreignKey:UserID"`
+	UserFeeds    []UserFeed    `gorm:"foreignKey:UserID"`
+	UserArticles []UserArticle `gorm:"foreignKey:UserID"`
 }
 
 type Category struct {
 	ID        uint   `gorm:"primaryKey"`
 	Name      string
 	UserID    uint
-	UserFeeds []UserFeed
+	UserFeeds []UserFeed `gorm:"foreignKey:CategoryID"`
 }
 
 // Global feed - stored once per unique URL
@@ -27,8 +27,8 @@ type Feed struct {
 	URL        string    `gorm:"unique"`
 	Title      string
 	LastFetch  time.Time
-	Articles   []Article
-	UserFeeds  []UserFeed
+	Articles   []Article  `gorm:"foreignKey:FeedID"`
+	UserFeeds  []UserFeed `gorm:"foreignKey:FeedID"`
 }
 
 // User's subscription to a feed

@@ -2,8 +2,8 @@
 
 // Tab Management
 function initTabs() {
-    const navButtons = document.querySelectorAll('.nav-button');
-    const tabContents = document.querySelectorAll('.tab-content');
+    const navButtons = document.querySelectorAll('.nav-tab');
+    const tabContents = document.querySelectorAll('.tab-panel');
 
     navButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -22,37 +22,40 @@ function initTabs() {
 
 // Theme Management
 function initThemeControls() {
-    const themeOptions = document.querySelectorAll('.theme-option');
-    const currentTheme = localStorage.getItem('theme') || 'auto';
+    const lightPreview = document.querySelector('.theme-light');
+    const darkPreview = document.querySelector('.theme-dark');
+    const currentTheme = localStorage.getItem('theme') || 'light';
     
     // Set initial active theme
-    themeOptions.forEach(option => {
-        if (option.dataset.theme === currentTheme) {
-            option.classList.add('active');
-        }
-        
-        option.addEventListener('click', () => {
-            const theme = option.dataset.theme;
-            
-            // Update active state
-            themeOptions.forEach(opt => opt.classList.remove('active'));
-            option.classList.add('active');
-            
-            // Apply theme
-            setTheme(theme);
-        });
+    if (currentTheme === 'light') {
+        lightPreview?.classList.add('active');
+        darkPreview?.classList.remove('active');
+    } else {
+        darkPreview?.classList.add('active');
+        lightPreview?.classList.remove('active');
+    }
+    
+    // Add click handlers
+    lightPreview?.addEventListener('click', () => {
+        lightPreview.classList.add('active');
+        darkPreview?.classList.remove('active');
+        setTheme('light');
+    });
+    
+    darkPreview?.addEventListener('click', () => {
+        darkPreview.classList.add('active');
+        lightPreview?.classList.remove('active');
+        setTheme('dark');
     });
 }
 
 function setTheme(theme) {
     localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
     
-    if (theme === 'auto') {
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', systemDark ? 'dark' : 'light');
-    } else {
-        document.documentElement.setAttribute('data-theme', theme);
-    }
+    // Update body class for theme
+    document.body.className = document.body.className.replace(/theme-\w+/g, '');
+    document.body.classList.add(`theme-${theme}`);
 }
 
 // Feed Management

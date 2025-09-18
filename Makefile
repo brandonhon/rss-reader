@@ -41,8 +41,26 @@ run: ## Run the application in development mode
 	@echo "$(YELLOW)Press Ctrl+C to stop$(NC)"
 	@go run main.go
 
+.PHONY: run-safe
+run-safe: db-backup-auto ## Run with automatic database backup first
+	@echo "$(BLUE)Starting RSS Reader on http://localhost:8080$(NC)"
+	@echo "$(YELLOW)Press Ctrl+C to stop$(NC)"
+	@go run main.go
+
 .PHONY: dev
 dev: deps ## Run with auto-reload (requires air: go install github.com/cosmtrek/air@latest)
+	@if command -v air >/dev/null 2>&1; then \
+		echo "$(BLUE)Starting RSS Reader with auto-reload$(NC)"; \
+		air; \
+	else \
+		echo "$(RED)Air not found. Installing...$(NC)"; \
+		go install github.com/cosmtrek/air@latest; \
+		echo "$(BLUE)Starting RSS Reader with auto-reload$(NC)"; \
+		air; \
+	fi
+
+.PHONY: dev-safe
+dev-safe: deps db-backup-auto ## Run with auto-reload and automatic database backup
 	@if command -v air >/dev/null 2>&1; then \
 		echo "$(BLUE)Starting RSS Reader with auto-reload$(NC)"; \
 		air; \
@@ -94,6 +112,16 @@ clean: ## Clean build artifacts and cache
 	@go clean -modcache
 	@echo "$(GREEN)Clean completed$(NC)"
 
+.PHONY: clean-dev
+clean-dev: ## Clean development databases and backups
+	@echo "$(BLUE)Cleaning development databases$(NC)"
+	@rm -f rss_reader_dev.db rss_reader_dev_backup_*.db
+	@echo "$(GREEN)Development databases cleaned$(NC)"
+
+.PHONY: clean-all
+clean-all: clean clean-dev ## Clean everything including development databases
+	@echo "$(GREEN)All artifacts cleaned$(NC)"
+
 .PHONY: test
 test: ## Run tests
 	@echo "$(BLUE)Running tests$(NC)"
@@ -118,10 +146,20 @@ format: ## Format Go code
 .PHONY: stop
 stop: ## Stop any running RSS reader processes
 	@echo "$(BLUE)Stopping RSS Reader processes$(NC)"
-	@pkill -f "go run main.go" || true
-	@pkill -f "rss-reader" || true
-	@pkill -f "air" || true
-	@echo "$(GREEN)Processes stopped$(NC)"
+	@echo "$(YELLOW)Checking for processes on port 8080...$(NC)"
+	@if lsof -i :8080 >/dev/null 2>&1; then \
+		echo "$(YELLOW)Killing processes on port 8080...$(NC)"; \
+		lsof -ti :8080 | xargs kill -9 2>/dev/null || true; \
+	fi
+	@echo "$(YELLOW)Attempting to stop go run processes...$(NC)"
+	@pkill -f "go run main.go" 2>/dev/null || echo "$(YELLOW)No go run processes found$(NC)"
+	@echo "$(YELLOW)Attempting to stop main binary processes...$(NC)"
+	@pkill -f "main" 2>/dev/null || echo "$(YELLOW)No main processes found$(NC)"
+	@echo "$(YELLOW)Attempting to stop rss-reader processes...$(NC)"
+	@pkill -f "rss-reader" 2>/dev/null || echo "$(YELLOW)No rss-reader processes found$(NC)"
+	@echo "$(YELLOW)Attempting to stop air processes...$(NC)"
+	@pkill -f "air" 2>/dev/null || echo "$(YELLOW)No air processes found$(NC)"
+	@echo "$(GREEN)Stop command completed$(NC)"
 
 .PHONY: restart
 restart: stop run ## Stop and restart the application
@@ -144,6 +182,47 @@ db-backup: ## Backup the SQLite database
 		echo "$(GREEN)Database backed up$(NC)"; \
 	else \
 		echo "$(YELLOW)No database file found$(NC)"; \
+	fi
+
+.PHONY: db-backup-auto
+db-backup-auto: ## Automatically backup database if it exists (for development)
+	@if [ -f rss_reader.db ]; then \
+		echo "$(BLUE)Auto-backing up database for development$(NC)"; \
+		cp rss_reader.db rss_reader_dev_backup_$(shell date +%Y%m%d_%H%M%S).db; \
+		echo "$(GREEN)Development backup created$(NC)"; \
+	fi
+
+.PHONY: db-dev
+db-dev: ## Create/use separate development database
+	@echo "$(BLUE)Setting up development database$(NC)"
+	@if [ -f rss_reader.db ] && [ ! -f rss_reader_dev.db ]; then \
+		cp rss_reader.db rss_reader_dev.db; \
+		echo "$(GREEN)Development database created from production$(NC)"; \
+	elif [ ! -f rss_reader_dev.db ]; then \
+		echo "$(YELLOW)Creating fresh development database$(NC)"; \
+		touch rss_reader_dev.db; \
+	else \
+		echo "$(GREEN)Development database already exists$(NC)"; \
+	fi
+
+.PHONY: run-dev
+run-dev: db-dev ## Run with separate development database
+	@echo "$(BLUE)Starting RSS Reader (DEV MODE) on http://localhost:8080$(NC)"
+	@echo "$(YELLOW)Using development database: rss_reader_dev.db$(NC)"
+	@echo "$(YELLOW)Press Ctrl+C to stop$(NC)"
+	DB_FILE=rss_reader_dev.db go run main.go
+
+.PHONY: dev-db
+dev-db: deps db-dev ## Run with auto-reload using development database
+	@echo "$(YELLOW)Using development database: rss_reader_dev.db$(NC)"
+	@if command -v air >/dev/null 2>&1; then \
+		echo "$(BLUE)Starting RSS Reader (DEV MODE) with auto-reload$(NC)"; \
+		DB_FILE=rss_reader_dev.db air; \
+	else \
+		echo "$(RED)Air not found. Installing...$(NC)"; \
+		go install github.com/cosmtrek/air@latest; \
+		echo "$(BLUE)Starting RSS Reader (DEV MODE) with auto-reload$(NC)"; \
+		DB_FILE=rss_reader_dev.db air; \
 	fi
 
 .PHONY: db-restore
