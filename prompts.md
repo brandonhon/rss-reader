@@ -1,0 +1,13 @@
+### Information Architecture
+**Prompt:**<br>
+Design a detailed information architecture for a rss feed reader that serves . The platform includes features such as three panel design, categories, starred feeds, unread feeds, fresh feeds (last 24 hours starting at 00:00), search, preferences page (users, feeds, theme, system info, categories, fetch interval, font size). Consider user roles including admin and normal user and their permissions. Map out the main navigation structure, secondary navigation, and content hierarchy. Include recommendations for taxonomy, metadata structure, and search functionality. Address how the architecture will scale for multiple users and handle images, text, multiple user with the same feeds, scrolling marks feed as read, mark feed unread.
+
+### Wireframe Description
+**Prompt:**<br>
+Describe a detailed wireframe layout for the dashboard/home of our rss feed reader. The interface should display categories and count of fresh articles for each category, starred count, unread count, fresh count, search and username and avatar in bottom of left pane and support actions including mark read/unread, star/unstar, share and path to preferences page through username/avatar. Include specifications for: layout grid, component hierarchy, content prioritization, and responsive behavior across pc browser and mobile browser. Consider different user states like mobile or not and how they affect the display. Address accessibility requirements for mobile view.
+
+Describe a detailed wireframe layout for the [specific page/feature] of our [product type]. The interface should display [list key data points/features] and support actions including [list actions]. Include specifications for: layout grid, component hierarchy, content prioritization, and responsive behavior across [list device types]. Consider different user states like [list states] and how they affect the display. Address accessibility requirements for [specific user needs].
+
+### Interaction Design
+**Prompt:**<br>
+Design detailed interaction patterns for [specific feature] in our [product type]. The target users are [user type] with [skill level] technical proficiency. Include specifications for: gestures, transitions, feedback mechanisms, and error states. Detail the behavior for [list specific interactions]. Consider edge cases like [list scenarios] and accessibility requirements for users who [specific limitation]. Include micro-interactions for [list moments].
