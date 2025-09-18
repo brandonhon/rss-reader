@@ -239,48 +239,74 @@ body {
     color: var(--text-tertiary);
 }
 
-.add-feed-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    background: var(--bg-accent);
-    color: var(--text-white);
-    border: none;
-    border-radius: var(--radius-md);
-    font-weight: var(--font-weight-medium);
-    cursor: pointer;
-    transition: var(--transition);
-    margin-bottom: var(--space-3);
-    width: 100%;
+.user-dropdown-wrapper {
+    position: relative;
+    margin-top: var(--space-3);
 }
 
-.add-feed-btn:hover {
-    background: #4f46e5;
-}
-
-.user-actions {
-    display: flex;
-    gap: var(--space-2);
-}
-
-.user-action-btn {
-    flex: 1;
-    padding: var(--space-2);
+.user-dropdown-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     background: var(--bg-tertiary);
     color: var(--text-secondary);
     border: none;
-    border-radius: var(--radius-md);
     cursor: pointer;
     transition: var(--transition);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 16px;
+    margin-left: auto;
 }
 
-.user-action-btn:hover {
+.user-dropdown-btn:hover {
     background: var(--bg-accent);
     color: var(--text-white);
+}
+
+.user-dropdown {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-2);
+    min-width: 160px;
+    margin-bottom: var(--space-2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: 10px var(--space-3);
+    border: none;
+    background: none;
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 14px;
+    font-weight: var(--font-weight-medium);
+}
+
+.dropdown-item:hover {
+    background: var(--bg-hover);
 }
 
 /* Resize Handles */

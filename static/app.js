@@ -900,9 +900,11 @@ ArticleManager.prototype.applyFilters = function() {
 
 // Preferences modal functions
 function openPreferences() {
-    // Close user menu
-    const userMenu = document.getElementById('user-menu');
-    userMenu.classList.add('hidden');
+    // Close user dropdown
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+        dropdown.classList.remove('show');
+    }
     
     // Navigate to preferences page
     window.location.href = '/preferences';
@@ -931,6 +933,24 @@ function updateThemeButtons() {
         }
     }
 }
+
+// User dropdown functions
+function toggleUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+    }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const dropdown = document.getElementById('userDropdown');
+    const dropdownBtn = document.querySelector('.user-dropdown-btn');
+    
+    if (dropdown && !dropdown.contains(e.target) && !dropdownBtn.contains(e.target)) {
+        dropdown.classList.remove('show');
+    }
+});
 
 // Close modals when clicking outside
 document.addEventListener('click', (e) => {

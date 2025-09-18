@@ -54,17 +54,20 @@
                                 <div class="user-status">Active</div>
                             </div>
                         </div>
-                        <button class="add-feed-btn" onclick="openManageFeeds()">
-                            <span>+</span>
-                            <span>Add Feed</span>
-                        </button>
-                        <div class="user-actions">
-                            <button class="user-action-btn" onclick="openPreferences()" title="Preferences">
-                                <span>⚙️</span>
+                        <div class="user-dropdown-wrapper">
+                            <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
+                                <span>⋯</span>
                             </button>
-                            <button class="user-action-btn" onclick="logout()" title="Logout">
-                                <span>🚪</span>
-                            </button>
+                            <div class="user-dropdown" id="userDropdown">
+                                <button class="dropdown-item" onclick="openPreferences()">
+                                    <span>⚙️</span>
+                                    <span>Preferences</span>
+                                </button>
+                                <button class="dropdown-item" onclick="logout()">
+                                    <span>🚪</span>
+                                    <span>Logout</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
