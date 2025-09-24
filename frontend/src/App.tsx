@@ -106,7 +106,7 @@ const AppContent: React.FC = () => {
 
   return (
     <ProtectedRoute>
-      <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-800 transition-theme">
+      <div className="h-screen flex flex-col transition-theme" style={{backgroundColor: 'var(--color-background)'}}>
         {/* Top Toolbar */}
         <Toolbar 
           onAddFeed={handleAddFeed}

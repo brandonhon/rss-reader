@@ -3,6 +3,42 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Light mode color variables */
+    --color-primary: #4F46E5;
+    --color-primary-hover: #4338CA;
+    --color-secondary: #6366F1;
+    --color-secondary-hover: #4F46E5;
+    --color-background: #F9FAFB;
+    --color-background-alt: #F3F4F6;
+    --color-panel: #FFFFFF;
+    --color-panel-border: #E5E7EB;
+    --color-text-main: #111827;
+    --color-text-secondary: #6B7280;
+    --color-text-muted: #9CA3AF;
+    --color-unread: #EF4444;
+    --color-hover: #E0E7FF;
+    --color-divider: #E5E7EB;
+  }
+
+  .dark {
+    /* Dark mode color variables */
+    --color-primary: #818CF8;
+    --color-primary-hover: #6366F1;
+    --color-secondary: #A5B4FC;
+    --color-secondary-hover: #818CF8;
+    --color-background: #1F2937;
+    --color-background-alt: #111827;
+    --color-panel: #111827;
+    --color-panel-border: #374151;
+    --color-text-main: #F9FAFB;
+    --color-text-secondary: #9CA3AF;
+    --color-text-muted: #6B7280;
+    --color-unread: #F87171;
+    --color-hover: #374151;
+    --color-divider: #374151;
+  }
+
   * {
     box-sizing: border-box;
   }
@@ -73,17 +109,13 @@
     transform: translateX(-50%);
     width: 1px;
     height: 100%;
-    background-color: theme('colors.gray.200');
+    background-color: var(--color-divider);
     transition: background-color 0.2s ease;
-  }
-
-  .dark .panel-divider::before {
-    background-color: theme('colors.gray.700');
   }
 
   .panel-divider:hover::before,
   .panel-divider.dragging::before {
-    background-color: theme('colors.indigo.500');
+    background-color: var(--color-primary);
     width: 3px;
   }
 

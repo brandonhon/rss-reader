@@ -6,7 +6,7 @@ export const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center p-4 transition-theme">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center p-4 transition-theme" style={{backgroundColor: 'var(--color-background)'}}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{

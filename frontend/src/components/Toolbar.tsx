@@ -69,24 +69,38 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   };
 
   return (
-    <div className="h-14 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 transition-theme">
+    <div className="h-14 border-b flex items-center justify-between px-4 transition-theme" style={{
+      backgroundColor: 'var(--color-panel)',
+      borderColor: 'var(--color-panel-border)'
+    }}>
       {/* Left section - App title and main actions */}
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{
+            background: `linear-gradient(to bottom right, var(--color-primary), var(--color-primary-hover))`
+          }}>
             <span className="text-white font-bold text-sm">R</span>
           </div>
-          <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+          <h1 className="text-lg font-semibold" style={{color: 'var(--color-text-main)'}}>
             RSS Reader
           </h1>
         </div>
 
-        <div className="h-6 w-px bg-gray-200 dark:bg-gray-700" />
+        <div className="h-6 w-px" style={{backgroundColor: 'var(--color-divider)'}} />
 
         <div className="flex items-center space-x-2">
           <button
             onClick={handleRefresh}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200 group"
+            className="p-2 rounded-lg transition-all duration-200 group"
+            style={{color: 'var(--color-text-secondary)'}}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-hover)';
+              e.currentTarget.style.color = 'var(--color-text-main)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = 'var(--color-text-secondary)';
+            }}
             title="Refresh feeds"
           >
             <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />

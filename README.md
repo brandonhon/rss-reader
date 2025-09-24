@@ -144,6 +144,35 @@ frontend/src/
 └── App.tsx                   # Main application component
 ```
 
+## Design System
+
+### Enhanced Color Palette
+
+The application uses a sophisticated color system with CSS custom properties for seamless theming:
+
+**Light Mode:**
+- Primary: #4F46E5 (indigo-600) / Hover: #4338CA (indigo-700)
+- Secondary: #6366F1 (indigo-500) / Hover: #4F46E5 (indigo-600)
+- Background: #F9FAFB (gray-50) / Alt: #F3F4F6 (gray-100)
+- Panels: #FFFFFF (white) / Border: #E5E7EB (gray-200)
+- Text: #111827 (gray-900) main / #6B7280 (gray-500) secondary / #9CA3AF (gray-400) muted
+- Unread indicator: #EF4444 (red-500)
+- Interactive hover: #E0E7FF (indigo-100)
+
+**Dark Mode:**
+- Primary: #818CF8 (indigo-400) / Hover: #6366F1 (indigo-500)
+- Secondary: #A5B4FC (indigo-300) / Hover: #818CF8 (indigo-400)
+- Background: #1F2937 (gray-800) / Alt: #111827 (gray-900)
+- Panels: #111827 (gray-900) / Border: #374151 (gray-700)
+- Text: #F9FAFB (gray-50) main / #9CA3AF (gray-400) secondary / #6B7280 (gray-500) muted
+- Unread indicator: #F87171 (red-400)
+- Interactive hover: #374151 (gray-700)
+
+### Typography
+- Primary font family: "Inter", sans-serif
+- Consistent weight scale: 400 (regular), 500 (medium), 600 (semibold), 700 (bold)
+- Optimized for readability across light and dark modes
+
 ## Configuration
 
 ### Backend Configuration

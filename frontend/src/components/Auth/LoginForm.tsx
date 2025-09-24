@@ -42,16 +42,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 transition-theme">
+      <div className="rounded-xl shadow-lg border p-8 transition-theme" style={{
+        backgroundColor: 'var(--color-panel)',
+        borderColor: 'var(--color-panel-border)'
+      }}>
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{
+            background: `linear-gradient(to bottom right, var(--color-primary), var(--color-primary-hover))`
+          }}>
             <span className="text-white font-bold text-2xl">R</span>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <h2 className="text-2xl font-bold mb-2" style={{color: 'var(--color-text-main)'}}>
             Welcome back
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p style={{color: 'var(--color-text-secondary)'}}>
             Sign in to your RSS Reader account
           </p>
         </div>
@@ -70,11 +75,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium mb-2" style={{color: 'var(--color-text-main)'}}>
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: 'var(--color-text-muted)'}} />
               <input
                 type="email"
                 id="email"
@@ -82,7 +87,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
+                className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
+                style={{
+                  backgroundColor: 'var(--color-background-alt)',
+                  borderColor: 'var(--color-panel-border)',
+                  color: 'var(--color-text-main)',
+                  '--tw-ring-color': 'var(--color-primary)'
+                }}
                 disabled={isLoading}
                 required
               />
@@ -91,11 +102,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium mb-2" style={{color: 'var(--color-text-main)'}}>
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: 'var(--color-text-muted)'}} />
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
@@ -103,14 +114,25 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
-                className="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
+                className="w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
+                style={{
+                  backgroundColor: 'var(--color-background-alt)',
+                  borderColor: 'var(--color-panel-border)',
+                  color: 'var(--color-text-main)',
+                  '--tw-ring-color': 'var(--color-primary)'
+                }}
                 disabled={isLoading}
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors duration-200"
+                style={{
+                  color: 'var(--color-text-muted)'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-text-secondary)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-muted)'}
                 disabled={isLoading}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -122,7 +144,22 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+            className="w-full flex items-center justify-center space-x-2 py-3 px-4 text-white font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+            style={{
+              backgroundColor: isLoading ? 'var(--color-text-muted)' : 'var(--color-primary)',
+              '--tw-ring-color': 'var(--color-primary)',
+              '--tw-ring-offset-color': 'var(--color-panel)'
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+              }
+            }}
           >
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -135,11 +172,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
         {/* Footer */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm" style={{color: 'var(--color-text-secondary)'}}>
             Don't have an account?{' '}
             <button
               onClick={onSwitchToRegister}
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors duration-200"
+              className="font-medium transition-colors duration-200"
+              style={{color: 'var(--color-primary)'}}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-primary-hover)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-primary)'}
               disabled={isLoading}
             >
               Sign up
