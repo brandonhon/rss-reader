@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  RefreshCw, 
-  Plus, 
-  Settings, 
-  Sun, 
-  Moon, 
-  Search,
-  Filter,
-  Eye,
-  EyeOff,
-  User,
-  LogOut,
-  ChevronDown
-} from 'lucide-react';
+import {
+  ArrowPathIcon,
+  PlusIcon,
+  Cog6ToothIcon,
+  SunIcon,
+  MoonIcon,
+  MagnifyingGlassIcon,
+  FunnelIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  UserIcon,
+  ArrowRightOnRectangleIcon,
+  ChevronDownIcon
+} from '@heroicons/react/24/outline';
 import { useTheme } from '../contexts/ThemeContext';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -103,7 +103,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             }}
             title="Refresh feeds"
           >
-            <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+            <ArrowPathIcon className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
           </button>
 
           <button
@@ -111,7 +111,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200"
             title="Add feed"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -119,7 +119,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       {/* Center section - Search and filters */}
       <div className="flex items-center space-x-4 flex-1 max-w-md mx-8">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search articles..."
@@ -149,9 +149,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             title={state.showUnreadOnly ? 'Show all articles' : 'Show unread only'}
           >
             {state.showUnreadOnly ? (
-              <EyeOff className="w-4 h-4" />
+              <EyeSlashIcon className="w-4 h-4" />
             ) : (
-              <Eye className="w-4 h-4" />
+              <EyeIcon className="w-4 h-4" />
             )}
           </button>
         </div>
@@ -165,9 +165,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
         >
           {theme === 'light' ? (
-            <Moon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-200" />
+            <MoonIcon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-200" />
           ) : (
-            <Sun className="w-4 h-4 group-hover:rotate-12 transition-transform duration-200" />
+            <SunIcon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-200" />
           )}
         </button>
 
@@ -176,7 +176,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200 group"
           title="Settings"
         >
-          <Settings className="w-4 h-4 group-hover:rotate-45 transition-transform duration-200" />
+          <Cog6ToothIcon className="w-4 h-4 group-hover:rotate-45 transition-transform duration-200" />
         </button>
 
         {/* User Menu */}
@@ -195,7 +195,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
               <span className="text-sm font-medium hidden sm:block">
                 {user?.display_name || user?.email?.split('@')[0] || 'User'}
               </span>
-              <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
+              <ChevronDownIcon className={`w-3 h-3 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
             </div>
           </button>
 
@@ -228,7 +228,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   }}
                   className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
                 >
-                  <User className="w-4 h-4" />
+                  <UserIcon className="w-4 h-4" />
                   <span>Profile & Settings</span>
                 </button>
 
@@ -238,7 +238,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   onClick={handleLogout}
                   className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <ArrowRightOnRectangleIcon className="w-4 h-4" />
                   <span>Sign out</span>
                 </button>
               </div>

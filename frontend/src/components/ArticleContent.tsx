@@ -1,16 +1,16 @@
 import React from 'react';
 import { formatDistanceToNow, format } from 'date-fns';
 import { 
-  ExternalLink, 
-  User, 
-  Calendar, 
-  Rss,
-  Star,
-  Share,
-  Bookmark,
-  Eye,
-  EyeOff
-} from 'lucide-react';
+  ArrowTopRightOnSquareIcon, 
+  UserIcon, 
+  CalendarIcon, 
+  RssIcon,
+  StarIcon,
+  ShareIcon,
+  BookmarkIcon,
+  EyeIcon,
+  EyeSlashIcon
+} from '@heroicons/react/24/outline';
 import { useApp } from '../contexts/AppContext';
 import { mockFeeds } from '../data/mockData';
 
@@ -22,7 +22,7 @@ export const ArticleContent: React.FC = () => {
     return (
       <div className="h-full bg-white dark:bg-gray-900 flex items-center justify-center transition-theme">
         <div className="text-center text-gray-500 dark:text-gray-400">
-          <Rss className="w-16 h-16 mx-auto mb-4 opacity-50" />
+          <RssIcon className="w-16 h-16 mx-auto mb-4 opacity-50" />
           <h3 className="text-lg font-medium mb-2">No article selected</h3>
           <p className="text-sm">
             Select an article from the list to read it here
@@ -99,7 +99,7 @@ export const ArticleContent: React.FC = () => {
                   }}
                 />
               ) : (
-                <Rss className="w-4 h-4" />
+                <RssIcon className="w-4 h-4" />
               )}
               <span className="font-medium">
                 {feed?.title || 'Unknown Feed'}
@@ -117,7 +117,7 @@ export const ArticleContent: React.FC = () => {
               }`}
               title={isRead ? 'Mark as unread' : 'Mark as read'}
             >
-              {isRead ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {isRead ? <EyeSlashIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
             </button>
 
             <button
@@ -125,7 +125,7 @@ export const ArticleContent: React.FC = () => {
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200"
               title="Bookmark article"
             >
-              <Bookmark className="w-4 h-4" />
+              <BookmarkIcon className="w-4 h-4" />
             </button>
 
             <button
@@ -133,7 +133,7 @@ export const ArticleContent: React.FC = () => {
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200"
               title="Share article"
             >
-              <Share className="w-4 h-4" />
+              <ShareIcon className="w-4 h-4" />
             </button>
 
             <a
@@ -143,7 +143,7 @@ export const ArticleContent: React.FC = () => {
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all duration-200"
               title="Open original article"
             >
-              <ExternalLink className="w-4 h-4" />
+              <ArrowTopRightOnSquareIcon className="w-4 h-4" />
             </a>
           </div>
         </div>
@@ -158,13 +158,13 @@ export const ArticleContent: React.FC = () => {
             <div className="flex items-center space-x-4">
               {selectedItem.author && (
                 <div className="flex items-center space-x-1">
-                  <User className="w-4 h-4" />
+                  <UserIcon className="w-4 h-4" />
                   <span>{selectedItem.author}</span>
                 </div>
               )}
 
               <div className="flex items-center space-x-1">
-                <Calendar className="w-4 h-4" />
+                <CalendarIcon className="w-4 h-4" />
                 <span title={publishedDate.toLocaleString()}>
                   {format(publishedDate, 'MMM d, yyyy')} • {formatDistanceToNow(publishedDate, { addSuffix: true })}
                 </span>
@@ -243,7 +243,7 @@ export const ArticleContent: React.FC = () => {
 
               <div className="flex items-center space-x-2">
                 <button className="flex items-center space-x-1 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm text-gray-600 dark:text-gray-400 transition-all duration-200">
-                  <Star className="w-3 h-3" />
+                  <StarIcon className="w-3 h-3" />
                   <span>Add to favorites</span>
                 </button>
               </div>

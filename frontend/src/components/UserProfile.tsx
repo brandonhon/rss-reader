@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { 
-  X, 
-  User, 
-  Mail, 
-  Settings, 
-  Palette, 
-  Save,
-  AlertCircle,
-  CheckCircle 
-} from 'lucide-react';
+  XMarkIcon, 
+  UserIcon, 
+  EnvelopeIcon, 
+  Cog6ToothIcon, 
+  SwatchIcon, 
+  BookmarkIcon,
+  ExclamationCircleIcon,
+  CheckCircleIcon 
+} from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -77,7 +77,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose }) => 
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-white" />
+              <UserIcon className="w-5 h-5 text-white" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -92,7 +92,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose }) => 
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors duration-200"
           >
-            <X className="w-5 h-5" />
+            <XMarkIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -105,9 +105,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose }) => 
           }`}>
             <div className="flex items-center space-x-2">
               {message.type === 'success' ? (
-                <CheckCircle className="w-5 h-5" />
+                <CheckCircleIcon className="w-5 h-5" />
               ) : (
-                <AlertCircle className="w-5 h-5" />
+                <ExclamationCircleIcon className="w-5 h-5" />
               )}
               <span className="text-sm">{message.text}</span>
             </div>
@@ -123,7 +123,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose }) => 
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <EnvelopeIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="email"
                   value={formData.email}
@@ -142,7 +142,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose }) => 
                 Display Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
                   id="display_name"
@@ -162,7 +162,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose }) => 
                 Theme Preference
               </label>
               <div className="relative">
-                <Palette className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <SwatchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <select
                   id="theme"
                   name="theme"
@@ -200,7 +200,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose }) => 
               {isLoading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                <Save className="w-4 h-4" />
+                <BookmarkIcon className="w-4 h-4" />
               )}
               <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
             </button>

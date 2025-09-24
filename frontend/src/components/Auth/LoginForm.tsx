@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
+import { EyeIcon, EyeSlashIcon, EnvelopeIcon, LockClosedIcon, ArrowRightOnRectangleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface LoginFormProps {
@@ -65,7 +65,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         {error && (
           <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
             <div className="flex items-center space-x-2">
-              <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+              <ExclamationCircleIcon className="w-5 h-5 text-red-600 dark:text-red-400" />
               <span className="text-sm text-red-700 dark:text-red-300">{error}</span>
             </div>
           </div>
@@ -79,7 +79,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: 'var(--color-text-muted)'}} />
+              <EnvelopeIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: 'var(--color-text-muted)'}} />
               <input
                 type="email"
                 id="email"
@@ -106,7 +106,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: 'var(--color-text-muted)'}} />
+              <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: 'var(--color-text-muted)'}} />
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
@@ -135,7 +135,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
                 onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-muted)'}
                 disabled={isLoading}
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
               </button>
             </div>
           </div>
@@ -164,7 +164,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
-              <LogIn className="w-5 h-5" />
+              <ArrowRightOnRectangleIcon className="w-5 h-5" />
             )}
             <span>{isLoading ? 'Signing in...' : 'Sign in'}</span>
           </button>

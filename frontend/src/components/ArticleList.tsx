@@ -1,13 +1,13 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { 
-  Circle, 
-  CheckCircle, 
-  ExternalLink, 
-  User, 
-  Calendar,
-  Image as ImageIcon
-} from 'lucide-react';
+  EllipsisHorizontalCircleIcon, 
+  CheckCircleIcon, 
+  ArrowTopRightOnSquareIcon, 
+  UserIcon, 
+  CalendarIcon,
+  PhotoIcon
+} from '@heroicons/react/24/outline';
 import { useApp } from '../contexts/AppContext';
 import { FeedItem } from '../types';
 import { 
@@ -52,9 +52,9 @@ const ArticleItem: React.FC<ArticleItemProps> = ({
           title={isRead ? 'Mark as unread' : 'Mark as read'}
         >
           {isRead ? (
-            <CheckCircle className="w-4 h-4 text-gray-400" />
+            <CheckCircleIcon className="w-4 h-4 text-gray-400" />
           ) : (
-            <Circle className="w-4 h-4 text-red-500" />
+            <EllipsisHorizontalCircleIcon className="w-4 h-4 text-red-500" />
           )}
         </button>
 
@@ -101,20 +101,20 @@ const ArticleItem: React.FC<ArticleItemProps> = ({
               {/* Author */}
               {item.author && (
                 <div className="flex items-center space-x-1">
-                  <User className="w-3 h-3" />
+                  <UserIcon className="w-3 h-3" />
                   <span className="truncate max-w-20">{item.author}</span>
                 </div>
               )}
 
               {/* Has Image Indicator */}
               {item.image_url && (
-                <ImageIcon className="w-3 h-3 text-blue-500" title="Has image" />
+                <PhotoIcon className="w-3 h-3 text-blue-500" title="Has image" />
               )}
             </div>
 
             {/* Published Date */}
             <div className="flex items-center space-x-1 flex-shrink-0">
-              <Calendar className="w-3 h-3" />
+              <CalendarIcon className="w-3 h-3" />
               <span title={publishedDate.toLocaleString()}>
                 {formatDistanceToNow(publishedDate, { addSuffix: true })}
               </span>
@@ -131,7 +131,7 @@ const ArticleItem: React.FC<ArticleItemProps> = ({
           className="mt-1 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           title="Open in new tab"
         >
-          <ExternalLink className="w-3 h-3" />
+          <ArrowTopRightOnSquareIcon className="w-3 h-3" />
         </a>
       </div>
     </div>
@@ -247,7 +247,7 @@ export const ArticleList: React.FC = () => {
         {filteredArticles.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
             <div className="text-center">
-              <Circle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <EllipsisHorizontalCircleIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p className="text-lg font-medium mb-2">No articles found</p>
               <p className="text-sm">
                 {state.searchQuery 

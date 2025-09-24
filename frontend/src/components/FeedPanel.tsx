@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { 
-  ChevronDown, 
-  ChevronRight, 
-  Rss, 
-  AlertCircle,
-  Folder,
-  FolderOpen
-} from 'lucide-react';
+  ChevronDownIcon, 
+  ChevronRightIcon, 
+  RssIcon, 
+  ExclamationCircleIcon,
+  FolderIcon,
+  FolderOpenIcon
+} from '@heroicons/react/24/outline';
 import { useApp } from '../contexts/AppContext';
 import { mockCategories, mockFeeds, getFeedsByCategory } from '../data/mockData';
 import { Feed, Category } from '../types';
@@ -41,7 +41,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feed, isSelected, onClick }) => {
               }}
             />
           ) : (
-            <Rss className="w-4 h-4 text-gray-400" />
+            <RssIcon className="w-4 h-4 text-gray-400" />
           )}
         </div>
         
@@ -51,7 +51,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ feed, isSelected, onClick }) => {
               {feed.title || feed.url}
             </span>
             {isError && (
-              <AlertCircle className="w-3 h-3 text-red-500 flex-shrink-0" title={feed.error_message} />
+              <ExclamationCircleIcon className="w-3 h-3 text-red-500 flex-shrink-0" title={feed.error_message} />
             )}
           </div>
         </div>
@@ -94,9 +94,9 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         <div className="flex items-center space-x-2">
           <div className="flex-shrink-0">
             {isExpanded ? (
-              <FolderOpen className="w-4 h-4 text-gray-500" />
+              <FolderOpenIcon className="w-4 h-4 text-gray-500" />
             ) : (
-              <Folder className="w-4 h-4 text-gray-500" />
+              <FolderIcon className="w-4 h-4 text-gray-500" />
             )}
           </div>
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -111,9 +111,9 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         
         <div className="flex-shrink-0">
           {isExpanded ? (
-            <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200" />
+            <ChevronDownIcon className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200" />
           ) : (
-            <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200" />
+            <ChevronRightIcon className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200" />
           )}
         </div>
       </div>
@@ -181,7 +181,7 @@ export const FeedPanel: React.FC = () => {
             }`}
           >
             <div className="flex items-center space-x-3">
-              <Rss className="w-4 h-4 text-gray-500" />
+              <RssIcon className="w-4 h-4 text-gray-500" />
               <span className="text-sm font-medium">All Feeds</span>
             </div>
             {allFeedsUnreadCount > 0 && (
