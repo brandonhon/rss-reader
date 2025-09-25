@@ -1,0 +1,45 @@
+services:
+  # PocketBase Backend (same as production)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rss-reader-backend-dev
+    ports:
+      - "8090:8090"
+    volumes:
+      - pb_data:/pb/pb_data
+      - ./backend:/pb/src:ro  # Mount source for development
+    environment:
+      - POCKETBASE_URL=http://backend:8090
+    restart: unless-stopped
+    networks:
+      - rss-network
+
+  # React Frontend Development with hot reload
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: rss-reader-frontend-dev
+    ports:
+      - "3000:5173"  # Vite dev server default port
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Prevent overwriting node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8090
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - rss-network
+
+volumes:
+  pb_data:
+    name: rss_reader_pb_data_dev
+
+networks:
+  rss-network:
+    name: rss_reader_network_dev
+    driver: bridge

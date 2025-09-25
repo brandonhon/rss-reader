@@ -4,10 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a Python-based RSS reader application using PocketBase as the backend database. The system consists of two main components:
+This is a modern, full-stack RSS reader application with a React frontend and PocketBase backend. The system consists of three main components:
 
-1. **PocketBase Backend Setup** (`pocketbase-setup.py`) - Automates PocketBase installation, configuration, and database schema creation
-2. **RSS Feed Fetcher** (`feed-fetch.py`) - Background worker that periodically fetches RSS feeds and populates the database
+### Frontend (React + Tailwind CSS)
+- **Location**: `frontend/` directory
+- **Technology Stack**: React 18, TypeScript, Tailwind CSS, Vite, Heroicons
+- **Features**: Three-panel layout, authentication, themes, resizable panels, keyboard navigation
+- **Build System**: Vite with hot module replacement for development
+
+### Backend Components
+1. **PocketBase Backend Setup** (`backend/setup-collections.py`) - Automates database schema creation
+2. **RSS Feed Fetcher** (`backend/feed-fetch.py`) - Background worker that fetches RSS feeds
+3. **PocketBase Server** - Provides REST API and admin interface
 
 ### Database Schema
 
@@ -31,25 +39,57 @@ The application uses PocketBase with the following core collections (see `Pocket
 
 ## Development Commands
 
-### Setup and Installation
+### 🐳 Docker Setup (Recommended)
+
+```bash
+# Build Docker images
+make docker-build
+
+# Start development environment with hot reload
+make docker-dev
+
+# Start production environment  
+make docker-up
+
+# View logs
+make docker-logs
+
+# Stop and clean up
+make docker-down
+```
+
+### 🔧 Local Development Setup
+
+```bash
+# Complete setup for new users
+make setup
+
+# Start development environment (frontend + backend)
+make dev
+
+# Start only frontend development server
+make frontend-dev
+
+# Start only backend services  
+make backend-dev
+
+# Install dependencies
+make install
+
+# Stop all services
+make stop
+```
+
+### Manual Setup
 ```bash
 # Install PocketBase and create database schema
 python3 pocketbase-setup.py
 
-# Install Python dependencies (if requirements.txt exists)
+# Install Python dependencies
 pip3 install requests feedparser
 
-# Or install individual packages
-pip3 install requests feedparser
-```
-
-### Running the Application
-```bash
-# Start PocketBase backend (if not already running)
-./pocketbase_rss/pocketbase serve --dir ./pocketbase_rss/data
-
-# Run RSS feed fetcher
-python3 feed-fetch.py
+# Install frontend dependencies
+cd frontend && npm install
 ```
 
 ### Configuration
@@ -77,6 +117,44 @@ python3 feed-fetch.py
 - Feed fetch failures are logged to `feeds.error_message`
 - Failed feeds are marked with `fetch_status: "failed"`
 - Graceful handling of malformed RSS feeds
+
+## Docker Configuration
+
+### Container Structure
+- **Frontend Container**: React app served with nginx on port 3000
+- **Backend Container**: PocketBase + RSS fetcher on port 8090  
+- **Volumes**: `pb_data` for database persistence
+
+### Docker Files
+- `frontend/Dockerfile` - Production build with nginx
+- `frontend/Dockerfile.dev` - Development with hot reload
+- `backend/Dockerfile` - PocketBase + Python environment
+- `docker-compose.yml` - Production setup
+- `docker-compose.dev.yml` - Development setup
+
+## Frontend Architecture
+
+### Component Structure
+```
+frontend/src/
+├── components/
+│   ├── Auth/           # Authentication forms
+│   ├── Toolbar.tsx     # Top navigation bar
+│   ├── FeedPanel.tsx   # Left sidebar with feeds
+│   ├── ArticleList.tsx # Middle panel with articles
+│   ├── ArticleContent.tsx # Right panel with content
+│   └── ResizablePanels.tsx # Panel resize logic
+├── contexts/           # React contexts for state
+├── utils/             # Icon mappings and utilities
+└── types/             # TypeScript type definitions
+```
+
+### Key Technologies
+- **Icons**: Heroicons (replaced Lucide React)
+- **Styling**: Tailwind CSS with custom color system
+- **State**: React Context API
+- **Authentication**: PocketBase SDK integration
+- **Build**: Vite with TypeScript
 
 ## Potential Improvements (from feed-fetch.py comments)
 

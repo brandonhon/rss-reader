@@ -1,0 +1,46 @@
+services:
+  # PocketBase Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rss-reader-backend
+    ports:
+      - "8090:8090"
+    volumes:
+      - pb_data:/pb/pb_data
+    environment:
+      - POCKETBASE_URL=http://backend:8090
+    restart: unless-stopped
+    networks:
+      - rss-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8090/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rss-reader-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8090
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - rss-network
+
+volumes:
+  pb_data:
+    name: rss_reader_pb_data
+
+networks:
+  rss-network:
+    name: rss_reader_network
+    driver: bridge

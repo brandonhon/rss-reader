@@ -23,11 +23,34 @@ A modern, three-panel RSS reader application with a React + Tailwind CSS fronten
 ## Quick Start
 
 ### Prerequisites
+
+**Option 1: Docker (Recommended)**
+- Docker Desktop
+- Docker Compose
+
+**Option 2: Local Development**
 - Python 3.7+ (for backend)
 - Node.js 16+ (for frontend)
 - Git
 
-### Using Make Commands
+### 🐳 Docker Setup (Recommended)
+
+```bash
+# Build and start everything with Docker
+make docker-build
+make docker-up
+
+# Or for development with hot reload
+make docker-dev
+
+# Stop containers
+make docker-down
+
+# View logs
+make docker-logs
+```
+
+### 🔧 Local Development Setup
 
 ```bash
 # Start development environment (both frontend and backend)
@@ -226,15 +249,36 @@ python3 feed-fetch.py
 
 ## Production Deployment
 
-### Frontend
+### 🐳 Docker Production Deployment (Recommended)
+
+```bash
+# Build production images
+make docker-build
+
+# Start in production mode
+make docker-up
+
+# The application will be available at:
+# - Frontend: http://localhost:3000
+# - Backend Admin: http://localhost:8090/_/
+```
+
+**Using Docker Compose directly:**
+```bash
+docker-compose up -d --build
+```
+
+### Manual Production Deployment
+
+#### Frontend
 Build the React app and serve with any static file server:
 ```bash
 cd frontend
 npm run build
-# Serve the 'dist' directory
+# Serve the 'dist' directory with nginx, apache, or any static server
 ```
 
-### Backend
+#### Backend
 1. Configure production PocketBase settings
 2. Set up proper admin credentials
 3. Configure feed fetcher as a service/daemon
@@ -275,6 +319,23 @@ The frontend is designed to be Electron-ready:
 ## Troubleshooting
 
 ### Common Issues
+
+#### Docker Issues
+
+1. **Docker containers fail to start**:
+   - Ensure Docker Desktop is running
+   - Check if ports 3000 and 8090 are available
+   - Try `make docker-clean` and rebuild
+
+2. **Permission denied errors**:
+   - On Linux, ensure your user is in the docker group
+   - Try running with `sudo` if necessary
+
+3. **Container logs show errors**:
+   - Check logs with `make docker-logs`
+   - Verify environment variables in docker-compose.yml
+
+#### Local Development Issues
 
 1. **PocketBase fails to start**:
    - Check if port 8090 is available

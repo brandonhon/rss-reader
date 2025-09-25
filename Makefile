@@ -1,7 +1,7 @@
 # RSS Reader Makefile
 # Manages both frontend (React) and backend (PocketBase + Python) services
 
-.PHONY: help install dev prod stop clean frontend-dev backend-dev frontend-build frontend-prod backend-setup logs check-deps debug-frontend status test lint setup
+.PHONY: help install dev prod stop clean frontend-dev backend-dev frontend-build frontend-prod backend-setup logs check-deps debug-frontend status test lint setup docker-build docker-up docker-down docker-dev docker-logs docker-clean
 
 # Default target
 help:
@@ -29,6 +29,14 @@ help:
 	@echo "  make logs            - Show logs from running services"
 	@echo "  make test            - Run tests (when available)"
 	@echo "  make lint            - Run code linters"
+	@echo ""
+	@echo "🐳 Docker Commands:"
+	@echo "  make docker-build    - Build Docker images for frontend and backend"
+	@echo "  make docker-up       - Start all services with Docker Compose (production)"
+	@echo "  make docker-dev      - Start development environment with Docker"
+	@echo "  make docker-down     - Stop and remove Docker containers"
+	@echo "  make docker-logs     - Show Docker container logs"
+	@echo "  make docker-clean    - Remove Docker images and volumes"
 	@echo ""
 	@echo "💡 Quick Start:"
 	@echo "  1. make setup        - First-time setup"
@@ -186,3 +194,48 @@ debug-frontend:
 	@echo ""
 	@echo "Attempting to run vite directly:"
 	@cd frontend && npx vite --version 2>/dev/null || echo "❌ Vite not working"
+
+# Docker Commands
+docker-build:
+	@echo "🐳 Building Docker images..."
+	@docker-compose build
+	@echo "✅ Docker images built successfully"
+
+docker-up:
+	@echo "🐳 Starting RSS Reader with Docker (production mode)..."
+	@docker-compose up -d
+	@echo "✅ RSS Reader started!"
+	@echo "Frontend: http://localhost:3000"
+	@echo "Backend Admin: http://localhost:8090/_/"
+	@echo "Use 'make docker-logs' to see container logs"
+
+docker-dev:
+	@echo "🐳 Starting RSS Reader with Docker (development mode)..."
+	@docker-compose -f docker-compose.dev.yml up -d
+	@echo "✅ RSS Reader development environment started!"
+	@echo "Frontend: http://localhost:3000"
+	@echo "Backend Admin: http://localhost:8090/_/"
+
+docker-down:
+	@echo "🐳 Stopping Docker containers..."
+	@docker-compose down
+	@docker-compose -f docker-compose.dev.yml down 2>/dev/null || true
+	@echo "✅ All containers stopped"
+
+docker-logs:
+	@echo "🐳 Docker container logs:"
+	@docker-compose logs -f --tail=100
+
+docker-clean:
+	@echo "🐳 Cleaning Docker resources..."
+	@docker-compose down -v --remove-orphans
+	@docker-compose -f docker-compose.dev.yml down -v --remove-orphans 2>/dev/null || true
+	@docker system prune -f
+	@echo "✅ Docker cleanup complete"
+
+# Check Docker dependencies
+check-docker:
+	@echo "🔍 Checking Docker dependencies..."
+	@docker --version || (echo "❌ Docker not found. Please install Docker Desktop" && exit 1)
+	@docker-compose --version || (echo "❌ Docker Compose not found" && exit 1)
+	@echo "✅ Docker is ready"
