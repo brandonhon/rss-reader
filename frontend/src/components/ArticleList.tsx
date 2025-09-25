@@ -10,13 +10,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { useApp } from '../contexts/AppContext';
 import { FeedItem } from '../types';
-import { 
-  mockFeedItems, 
-  getItemsByFeed, 
-  getAllItems, 
-  searchItems,
-  mockFeeds 
-} from '../data/mockData';
 
 interface ArticleItemProps {
   item: FeedItem;
@@ -31,7 +24,8 @@ const ArticleItem: React.FC<ArticleItemProps> = ({
   onClick, 
   onToggleRead 
 }) => {
-  const feed = mockFeeds.find(f => f.id === item.feed_id);
+  const { feeds } = useApp();
+  const feed = feeds.find(f => f.id === item.feed_id);
   const publishedDate = item.published ? new Date(item.published) : new Date(item.created_at);
   const isRead = item.is_read;
 
@@ -139,7 +133,7 @@ const ArticleItem: React.FC<ArticleItemProps> = ({
 };
 
 export const ArticleList: React.FC = () => {
-  const { state, selectItem, markItemAsRead, markItemAsUnread } = useApp();
+  const { state, selectItem, markItemAsRead, markItemAsUnread, feedItems, feeds } = useApp();
 
   // Get articles based on current selection and filters
   const getFilteredArticles = (): FeedItem[] => {
@@ -147,15 +141,15 @@ export const ArticleList: React.FC = () => {
 
     // Get base articles
     if (state.selectedFeed) {
-      articles = getItemsByFeed(state.selectedFeed.id);
+      articles = feedItems.filter(item => item.feed_id === state.selectedFeed.id);
     } else if (state.selectedCategory) {
       // Get all articles from feeds in the selected category
-      const categoryFeeds = mockFeeds.filter(feed => feed.category === state.selectedCategory?.name);
-      articles = mockFeedItems.filter(item => 
+      const categoryFeeds = feeds.filter(feed => feed.category === state.selectedCategory?.name);
+      articles = feedItems.filter(item => 
         categoryFeeds.some(feed => feed.id === item.feed_id)
       );
     } else {
-      articles = getAllItems();
+      articles = [...feedItems];
     }
 
     // Apply search filter

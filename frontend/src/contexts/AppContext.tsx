@@ -1,8 +1,16 @@
 import React, { createContext, useContext, useReducer, useCallback } from 'react';
 import { AppState, Feed, FeedItem, Category, PanelSizes } from '../types';
+import { useFeeds } from '../hooks/useFeeds';
 
 interface AppContextType {
   state: AppState;
+  // Data from useFeeds hook
+  feeds: Feed[];
+  categories: Category[];
+  feedItems: FeedItem[];
+  loading: boolean;
+  error: string | null;
+  // Actions
   selectFeed: (feed: Feed | null) => void;
   selectItem: (item: FeedItem | null) => void;
   selectCategory: (category: Category | null) => void;
@@ -12,6 +20,10 @@ interface AppContextType {
   toggleShowUnreadOnly: () => void;
   markItemAsRead: (itemId: string) => void;
   markItemAsUnread: (itemId: string) => void;
+  // Feed management
+  addFeed: (url: string, category?: string) => Promise<any>;
+  removeFeed: (feedId: string) => Promise<void>;
+  refreshFeeds: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -103,6 +115,7 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const feedsData = useFeeds();
 
   const selectFeed = useCallback((feed: Feed | null) => {
     dispatch({ type: 'SELECT_FEED', payload: feed });
@@ -142,6 +155,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const value = {
     state,
+    // Expose feeds data
+    feeds: feedsData.feeds,
+    categories: feedsData.categories,
+    feedItems: feedsData.feedItems,
+    loading: feedsData.loading,
+    error: feedsData.error,
+    // Actions
     selectFeed,
     selectItem,
     selectCategory,
@@ -151,6 +171,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     toggleShowUnreadOnly,
     markItemAsRead,
     markItemAsUnread,
+    // Feed management
+    addFeed: feedsData.addFeed,
+    removeFeed: feedsData.removeFeed,
+    refreshFeeds: feedsData.refreshFeeds,
   };
 
   return (

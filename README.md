@@ -117,10 +117,17 @@ make clean
 
 After starting the application:
 
-1. **Create your account**: Click "Sign up" to register a new user
-2. **Login**: Use your credentials to access the RSS reader
-3. **Add feeds**: Use the "+" button in the toolbar to add RSS feeds
-4. **Configure preferences**: Click your avatar → "Profile & Settings" to customize theme and display name
+1. **Access the application**: Go to http://localhost:3000 (frontend) 
+2. **Create your account**: Click "Sign up" to register a new user
+3. **Login**: Use your credentials to access the RSS reader  
+4. **Add feeds**: Use the "+" button in the toolbar to add RSS feeds (e.g., https://techcrunch.com/feed/)
+5. **Configure preferences**: Click your avatar → "Profile & Settings" to customize theme and display name
+6. **Admin access**: Visit http://localhost:8090/_ with admin@example.com / password123 for database management
+
+**Important Notes:**
+- The application starts with no feeds - you need to add your first feed using the + button
+- After adding feeds, the RSS fetcher will automatically start downloading articles
+- The feed fetcher runs every 5 minutes to check for new articles
 
 ## Architecture
 
@@ -351,6 +358,23 @@ The frontend is designed to be Electron-ready:
    - Clear node_modules and reinstall
    - Check Node.js version compatibility
    - Verify all dependencies are installed
+
+#### Application Issues
+
+1. **No feeds showing in the application**:
+   - This is expected for first-time use - the application no longer uses mock data
+   - Use the + button in the toolbar to add your first RSS feed
+   - Check that PocketBase is running on http://localhost:8090
+
+2. **Added feeds not showing articles**:
+   - Wait a few minutes for the RSS fetcher to download articles
+   - Check backend logs for feed fetching errors
+   - Verify the RSS feed URL is valid and accessible
+
+3. **Authentication not working**:
+   - Make sure you're creating a user account (not using admin credentials)
+   - Admin credentials (admin@example.com) are for database management only
+   - Regular user accounts are created through the frontend signup
 
 ### Performance Optimization
 

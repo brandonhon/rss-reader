@@ -9,9 +9,10 @@ import { ArticleList } from './components/ArticleList';
 import { ArticleContent } from './components/ArticleContent';
 import { ResizablePanels } from './components/ResizablePanels';
 import { UserProfile } from './components/UserProfile';
+import { AddFeedModal } from './components/AddFeedModal';
 
 // Keyboard navigation hook
-const useKeyboardNavigation = () => {
+const useKeyboardNavigation = (onAddFeed: () => void, onRefresh: () => void) => {
   const { state, selectFeed, selectItem } = useApp();
 
   useEffect(() => {
@@ -49,12 +50,12 @@ const useKeyboardNavigation = () => {
         case 'r':
           e.preventDefault();
           // Refresh feeds
-          console.log('Refresh feeds');
+          onRefresh();
           break;
         case 'a':
           e.preventDefault();
           // Add new feed
-          console.log('Add new feed');
+          onAddFeed();
           break;
         case 'f':
           e.preventDefault();
@@ -78,27 +79,27 @@ const useKeyboardNavigation = () => {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [state, selectFeed, selectItem]);
+  }, [state, selectFeed, selectItem, onAddFeed, onRefresh]);
 };
 
 const AppContent: React.FC = () => {
-  useKeyboardNavigation();
+  const { refreshFeeds } = useApp();
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showAddFeedModal, setShowAddFeedModal] = useState(false);
 
   const handleAddFeed = () => {
-    // In a real app, this would open a modal or navigate to add feed page
-    const feedUrl = prompt('Enter RSS feed URL:');
-    if (feedUrl) {
-      console.log('Adding feed:', feedUrl);
-      // Would make API call to backend here
+    setShowAddFeedModal(true);
+  };
+
+  const handleRefresh = async () => {
+    try {
+      await refreshFeeds();
+    } catch (error) {
+      console.error('Failed to refresh feeds:', error);
     }
   };
 
-  const handleRefresh = () => {
-    console.log('Refreshing all feeds...');
-    // In a real app, this would trigger feed refresh
-    // Could show loading state, update last_fetched timestamps, etc.
-  };
+  useKeyboardNavigation(handleAddFeed, handleRefresh);
 
   const handleSettings = () => {
     setShowUserProfile(true);
@@ -123,6 +124,12 @@ const AppContent: React.FC = () => {
             minPanelWidth={250}
           />
         </div>
+
+        {/* Add Feed Modal */}
+        <AddFeedModal 
+          isOpen={showAddFeedModal}
+          onClose={() => setShowAddFeedModal(false)}
+        />
 
         {/* User Profile Modal */}
         <UserProfile 

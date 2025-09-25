@@ -8,7 +8,6 @@ import {
   FolderOpenIcon
 } from '@heroicons/react/24/outline';
 import { useApp } from '../contexts/AppContext';
-import { mockCategories, mockFeeds, getFeedsByCategory } from '../data/mockData';
 import { Feed, Category } from '../types';
 
 interface FeedItemProps {
@@ -83,7 +82,8 @@ const CategorySection: React.FC<CategorySectionProps> = ({
   selectedFeed,
   onFeedSelect,
 }) => {
-  const feeds = getFeedsByCategory(category.name);
+  const { feeds } = useApp();
+  const categoryFeeds = feeds.filter(feed => feed.category === category.name);
   
   return (
     <div className="mb-2">
@@ -120,7 +120,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
       
       {isExpanded && (
         <div className="ml-4 space-y-1 animate-fade-in">
-          {feeds.map((feed) => (
+          {categoryFeeds.map((feed) => (
             <FeedItem
               key={feed.id}
               feed={feed}
@@ -135,9 +135,9 @@ const CategorySection: React.FC<CategorySectionProps> = ({
 };
 
 export const FeedPanel: React.FC = () => {
-  const { state, selectFeed } = useApp();
+  const { state, selectFeed, feeds, categories, loading, error } = useApp();
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set(['Technology', 'Design']) // Start with some categories expanded
+    new Set() // Start with no categories expanded initially
   );
 
   const toggleCategory = (categoryId: string) => {
@@ -157,7 +157,37 @@ export const FeedPanel: React.FC = () => {
   };
 
   // All Feeds section
-  const allFeedsUnreadCount = mockFeeds.reduce((total, feed) => total + (feed.unread_count || 0), 0);
+  const allFeedsUnreadCount = feeds.reduce((total, feed) => total + (feed.unread_count || 0), 0);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Loading feeds...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex items-center justify-center">
+        <div className="text-center p-4">
+          <ExclamationCircleIcon className="w-12 h-12 text-red-500 mx-auto mb-2" />
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-2 text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-theme">
@@ -196,7 +226,7 @@ export const FeedPanel: React.FC = () => {
 
         {/* Categories */}
         <div className="space-y-1">
-          {mockCategories.map((category) => (
+          {categories.map((category) => (
             <CategorySection
               key={category.id}
               category={category}
@@ -209,7 +239,7 @@ export const FeedPanel: React.FC = () => {
         </div>
 
         {/* Uncategorized Feeds */}
-        {mockFeeds.filter(feed => !feed.category).length > 0 && (
+        {feeds.filter(feed => !feed.category || feed.category === '').length > 0 && (
           <div className="mt-4">
             <div className="px-3 py-2 mx-1">
               <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -217,8 +247,8 @@ export const FeedPanel: React.FC = () => {
               </span>
             </div>
             <div className="space-y-1">
-              {mockFeeds
-                .filter(feed => !feed.category)
+              {feeds
+                .filter(feed => !feed.category || feed.category === '')
                 .map((feed) => (
                   <FeedItem
                     key={feed.id}
@@ -230,12 +260,21 @@ export const FeedPanel: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Empty state */}
+        {feeds.length === 0 && (
+          <div className="text-center py-8">
+            <RssIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-sm text-gray-500 dark:text-gray-400">No feeds added yet</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Click the + button to add your first feed</p>
+          </div>
+        )}
       </div>
       
       {/* Panel Footer */}
       <div className="p-3 border-t border-gray-200 dark:border-gray-700">
         <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-          {mockFeeds.length} feeds • {allFeedsUnreadCount} unread
+          {feeds.length} feeds • {allFeedsUnreadCount} unread
         </div>
       </div>
     </div>
