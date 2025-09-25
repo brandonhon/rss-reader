@@ -125,9 +125,11 @@ After starting the application:
 6. **Admin access**: Visit http://localhost:8090/_ with admin@example.com / password123 for database management
 
 **Important Notes:**
-- The application starts with no feeds - you need to add your first feed using the + button
-- After adding feeds, the RSS fetcher will automatically start downloading articles
-- The feed fetcher runs every 5 minutes to check for new articles
+- The application now uses real PocketBase database instead of mock data
+- Create a user account through the Sign Up page (admin credentials are for database admin only)
+- Use the + button to add RSS feeds - you can create new categories on the fly
+- RSS fetcher automatically downloads articles every 5 minutes
+- Example feed URLs: https://feeds.foxnews.com/foxnews/latest, https://techcrunch.com/feed/
 
 ## Architecture
 

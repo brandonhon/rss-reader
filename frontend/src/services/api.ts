@@ -92,7 +92,7 @@ class ApiService {
 
   // Subscriptions API
   async getUserSubscriptions(userId: string) {
-    return this.request<ApiResponse<any>>(`/collections/subscriptions/records?filter=user_id="${userId}"`);
+    return this.request<ApiResponse<any>>(`/collections/subscriptions/records?filter=user_id="${userId}"&expand=feed_id`);
   }
 
   async createSubscription(data: { user_id: string; feed_id: string }) {

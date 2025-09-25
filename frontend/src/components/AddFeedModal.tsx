@@ -11,6 +11,8 @@ export const AddFeedModal: React.FC<AddFeedModalProps> = ({ isOpen, onClose }) =
   const { addFeed, categories } = useApp();
   const [url, setUrl] = useState('');
   const [category, setCategory] = useState('');
+  const [newCategory, setNewCategory] = useState('');
+  const [showNewCategory, setShowNewCategory] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,11 +30,14 @@ export const AddFeedModal: React.FC<AddFeedModalProps> = ({ isOpen, onClose }) =
       setLoading(true);
       setError('');
       
-      await addFeed(url.trim(), category || undefined);
+      const finalCategory = showNewCategory ? newCategory.trim() : category;
+      await addFeed(url.trim(), finalCategory || undefined);
       
       // Reset form and close modal
       setUrl('');
       setCategory('');
+      setNewCategory('');
+      setShowNewCategory(false);
       onClose();
     } catch (err) {
       console.error('Failed to add feed:', err);
@@ -46,6 +51,8 @@ export const AddFeedModal: React.FC<AddFeedModalProps> = ({ isOpen, onClose }) =
     if (!loading) {
       setUrl('');
       setCategory('');
+      setNewCategory('');
+      setShowNewCategory(false);
       setError('');
       onClose();
     }
@@ -95,20 +102,54 @@ export const AddFeedModal: React.FC<AddFeedModalProps> = ({ isOpen, onClose }) =
             <label htmlFor="feed-category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Category (optional)
             </label>
-            <select
-              id="feed-category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              disabled={loading}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <option value="">-- Select Category --</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.name}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+            {!showNewCategory ? (
+              <div className="space-y-2">
+                <select
+                  id="feed-category"
+                  value={category}
+                  onChange={(e) => {
+                    if (e.target.value === '_new_') {
+                      setShowNewCategory(true);
+                      setCategory('');
+                    } else {
+                      setCategory(e.target.value);
+                    }
+                  }}
+                  disabled={loading}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <option value="">-- Select Category --</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))}
+                  <option value="_new_">+ Create New Category</option>
+                </select>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  placeholder="Enter new category name"
+                  disabled={loading}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowNewCategory(false);
+                    setNewCategory('');
+                  }}
+                  disabled={loading}
+                  className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 disabled:opacity-50"
+                >
+                  ← Back to existing categories
+                </button>
+              </div>
+            )}
           </div>
 
           {error && (

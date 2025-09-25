@@ -68,14 +68,32 @@ export const useFeeds = () => {
     try {
       setData(prev => ({ ...prev, loading: true, error: null }));
 
-      // Load feeds, categories, and recent feed items in parallel
-      const [feedsResponse, categoriesResponse, itemsResponse] = await Promise.all([
-        apiService.getFeeds(),
+      // Get user's subscribed feeds first
+      const subscriptionsResponse = await apiService.getUserSubscriptions(user.id);
+      const userFeedIds = subscriptionsResponse.items?.map(sub => sub.expand?.feed_id?.id || sub.feed_id) || [];
+      
+      if (userFeedIds.length === 0) {
+        // No subscriptions, show empty state
+        setData({
+          feeds: [],
+          categories: [],
+          feedItems: [],
+          loading: false,
+          error: null,
+        });
+        return;
+      }
+
+      // Load user's feeds, categories, and recent feed items
+      const feedsResponse = await apiService.getFeeds();
+      const userFeeds = (feedsResponse.items || []).filter(feed => userFeedIds.includes(feed.id));
+      
+      const [categoriesResponse, itemsResponse] = await Promise.all([
         apiService.getCategories(),
         apiService.getFeedItems(undefined, 100, 1), // Get recent 100 items
       ]);
 
-      const feeds = (feedsResponse.items || []).map(transformFeed);
+      const feeds = userFeeds.map(transformFeed);
       const categories = (categoriesResponse.items || []).map(transformCategory);
       const feedItems = (itemsResponse.items || []).map(transformFeedItem);
 
@@ -127,11 +145,26 @@ export const useFeeds = () => {
     if (!user?.id) return;
 
     try {
+      // Create category if it doesn't exist and user provided one
+      if (category && category.trim()) {
+        const existingCategory = data.categories.find(cat => cat.name.toLowerCase() === category.toLowerCase());
+        if (!existingCategory) {
+          try {
+            await apiService.createCategory({
+              name: category.trim(),
+              user_id: user.id,
+              color: '#6366F1' // Default indigo color
+            });
+          } catch (categoryError) {
+            console.warn('Failed to create category, but continuing with feed creation:', categoryError);
+          }
+        }
+      }
+
       const feedData = {
         url,
         title: '', // Will be populated by the RSS fetcher
         category: category || '',
-        user_id: user.id,
       };
 
       const newFeed = await apiService.createFeed(feedData);
@@ -150,7 +183,7 @@ export const useFeeds = () => {
       console.error('Failed to add feed:', error);
       throw error;
     }
-  }, [user?.id, loadFeeds]);
+  }, [user?.id, loadFeeds, data.categories]);
 
   const removeFeed = useCallback(async (feedId: string) => {
     if (!user?.id) return;

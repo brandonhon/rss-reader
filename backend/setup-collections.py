@@ -67,6 +67,11 @@ def main():
         {
             "name": "feeds",
             "type": "base",
+            "listRule": "@request.auth.id != ''",
+            "viewRule": "@request.auth.id != ''", 
+            "createRule": "@request.auth.id != ''",
+            "updateRule": "@request.auth.id != ''",
+            "deleteRule": "@request.auth.id != ''",
             "schema": [
                 {"name": "url", "type": "url", "required": True},
                 {"name": "title", "type": "text"},
@@ -75,12 +80,18 @@ def main():
                 {"name": "category", "type": "text"},
                 {"name": "last_fetched", "type": "date"},
                 {"name": "fetch_status", "type": "text"},
-                {"name": "error_message", "type": "text"}
+                {"name": "error_message", "type": "text"},
+                {"name": "is_default", "type": "bool"}
             ]
         },
         {
             "name": "feed_items",
             "type": "base",
+            "listRule": "@request.auth.id != ''",
+            "viewRule": "@request.auth.id != ''",
+            "createRule": "@request.auth.id != ''",
+            "updateRule": "@request.auth.id != ''",
+            "deleteRule": "@request.auth.id != ''",
             "schema": [
                 {"name": "feed_id", "type": "relation", "options": {"collectionId": "feeds"}},
                 {"name": "title", "type": "text", "required": True},
@@ -95,6 +106,11 @@ def main():
         {
             "name": "subscriptions",
             "type": "base",
+            "listRule": "@request.auth.id != '' && user_id = @request.auth.id",
+            "viewRule": "@request.auth.id != '' && user_id = @request.auth.id",
+            "createRule": "@request.auth.id != '' && user_id = @request.auth.id",
+            "updateRule": "@request.auth.id != '' && user_id = @request.auth.id",
+            "deleteRule": "@request.auth.id != '' && user_id = @request.auth.id",
             "schema": [
                 {"name": "user_id", "type": "relation", "options": {"collectionId": "_pb_users_auth_"}},
                 {"name": "feed_id", "type": "relation", "options": {"collectionId": "feeds"}},
@@ -104,6 +120,11 @@ def main():
         {
             "name": "categories",
             "type": "base",
+            "listRule": "@request.auth.id != '' && user_id = @request.auth.id",
+            "viewRule": "@request.auth.id != '' && user_id = @request.auth.id",
+            "createRule": "@request.auth.id != '' && user_id = @request.auth.id",
+            "updateRule": "@request.auth.id != '' && user_id = @request.auth.id",
+            "deleteRule": "@request.auth.id != '' && user_id = @request.auth.id",
             "schema": [
                 {"name": "name", "type": "text", "required": True},
                 {"name": "user_id", "type": "relation", "options": {"collectionId": "_pb_users_auth_"}},
@@ -115,6 +136,24 @@ def main():
     # Create collections
     for collection in collections:
         create_collection(session, collection)
+    
+    # Create default Fox News feed
+    default_feed_data = {
+        "url": "https://feeds.foxnews.com/foxnews/latest",
+        "title": "Fox News - Latest",
+        "category": "News",
+        "is_default": True,
+        "fetch_status": "pending"
+    }
+    
+    try:
+        resp = session.post(f"{PB_URL}/api/collections/feeds/records", json=default_feed_data)
+        if resp.status_code in [200, 201]:
+            print("✅ Created default Fox News feed")
+        else:
+            print(f"❌ Failed to create default feed: {resp.text}")
+    except Exception as e:
+        print(f"❌ Error creating default feed: {e}")
     
     print("✅ Collection setup complete!")
 
