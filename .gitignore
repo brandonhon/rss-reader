@@ -75,5 +75,30 @@ ENV/
 .cache/
 .vite/
 
+# Docker
+.docker/
+docker-compose.override.yml
+
 # Claude Code temp files
 .claude/
+
+# Git cleanup files
+.git/gc.log
+
+# Temporary and log files
+*.tmp
+*.temp
+*.log
+*.out
+
+# Build artifacts and caches
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# PocketBase binary and data
+pocketbase*
+pb_data/
+
+# Local environment and configuration
+config.local.*
